@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         width: 150,
         maxHeight: 150,
+        borderWidth: 2,
         borderRadius: 60,
     },
     textInput: {
@@ -71,7 +72,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         color: "white",
-    }
+    },
+    emptyImage: {
+        width: 80,
+        height: 150,
+        resizeMode: 'contain'
+    },
 })
 
 export default styles

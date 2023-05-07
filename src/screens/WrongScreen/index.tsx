@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
+import { User } from '../../utils/Types';
 
 const WrongScreen = ({ navigation, route }: any) => {
+    const { chosenUser, newUsers }: { chosenUser: User, newUsers: Array<User> } = route.params
 
-    const { user, newUsers } = route.params
     useEffect(() =>
         navigation.addListener('beforeRemove', (e: any) => {
             e.preventDefault();
@@ -30,7 +31,7 @@ const WrongScreen = ({ navigation, route }: any) => {
                                 styles.btn
                             }
                             onPress={() => {
-                                navigation.push('Guess', { user: user, oldUsers: newUsers })
+                                navigation.push('Guess', { chosenUser: chosenUser, oldUsers: newUsers })
                             }
                             }>
                             <Text

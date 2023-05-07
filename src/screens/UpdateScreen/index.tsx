@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Keyboard, KeyboardAvoidingView, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import styles from './styles';
-import { User } from '../../utils/Types';
 import HintInput from '../../utils/HintInput';
 import Loading from '../../utils/Loading';
+import { UserContext } from '../../context/UserContext';
 
 const UpdateScreen = ({ route, navigation }: any) => {
-  const { user, base64Image }: { user: User, base64Image: string } = route.params
+  const { base64Image }: { base64Image: string } = route.params
+  const { user } = useContext(UserContext)
   const [username, setUsername] = useState(user?.instagram);
   const [hint1, setHint1] = useState(user?.hints[0]);
   const [hint2, setHint2] = useState(user?.hints[1]);
@@ -45,11 +46,8 @@ const UpdateScreen = ({ route, navigation }: any) => {
     if (!!image) {
       await storage().ref(user?.id).putFile(image);
     }
-    await firestore().collection('Users').doc(user?.id).set({
-      documentIndex: user?.documentIndex,
-      id: user?.id,
+    await firestore().collection('Users').doc(user?.id).update({
       instagram: username,
-      imageUrl: user?.imageUrl,
       hints: [hint1, hint2, hint3, hint4, hint5],
     }).then(() => {
       navigation.push('TabNav')

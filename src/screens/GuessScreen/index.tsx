@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, TouchableOpacity, View, Image } from 'react-native';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import React, { useContext, useEffect, useState } from 'react';
+import { ImageBackground, Text, TouchableOpacity, View, Image, FlatList, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { User } from '../../utils/Types';
 import styles from './styles';
-import getBase64FromUrl from '../../utils/UsefulFunctions';
 import Loading from '../../utils/Loading';
+import { UserContext } from '../../context/UserContext';
+import { getBase64FromUrl, generateRandomNumber } from '../../utils/UsefulFunctions'
 
 const GuessScreen = ({ navigation, route }: any) => {
+    const { user } = useContext(UserContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [chosenUser, setChosenUser] = useState<User>(undefined);
     const [newUsers, setNewUsers] = useState<Array<User>>();
@@ -21,39 +22,35 @@ const GuessScreen = ({ navigation, route }: any) => {
     }, [navigation]);
 
     useEffect(() => {
-        if (!route.params?.user) {
+        if (!route.params?.chosenUser) {
             fetchData()
         } else {
             setNewUsers(route.params.oldUsers)
-            setChosenUser(route.params.user)
+            setChosenUser(route.params.chosenUser)
         }
     }, []);
-
-    // last index included. 5 unique random numbers array.
-    const generateRandomArray = (lastIndex: number) => {
-        let randomNumberArr: any = [];
-        while (randomNumberArr.length < 5) {
-            let r = Math.floor(Math.random() * (lastIndex + 1))
-            if (randomNumberArr.indexOf(r) === -1) randomNumberArr.push(r);
-        }
-        return randomNumberArr
-    }
 
     const fetchData = async () => {
         setLoading(true)
         const documentSize = await (await firestore().collection('Users').get()).size
-        const randomIndexes = generateRandomArray(documentSize - 1)
         let randomUsers: Array<User> = []
 
-        for (let i = 0; i < randomIndexes.length; i++) {
-            let randomUser = await (((await firestore()
-                .collection('Users')
-                .where("documentIndex", "==", randomIndexes[i])
-                .get()).docs[0])).data()
-            await getBase64FromUrl(randomUser.imageUrl).then((result) => {
-                randomUser.imageUrl = result
-            })
-            randomUsers.push(randomUser)
+        while (randomUsers.length < 5) {
+            try {
+                let randomIndex = generateRandomNumber(documentSize - 1, [user?.documentIndex, ...randomUsers.map(user => user?.documentIndex)])
+                let randomUser = await (((await firestore()
+                    .collection('Users')
+                    .where("documentIndex", "==", randomIndex)
+                    .get()).docs[0])).data()
+
+                await getBase64FromUrl(randomUser?.imageUrl).then((result) => {
+                    randomUser.imageUrl = result
+                })
+
+                randomUsers.push(randomUser)
+            } catch {
+                continue;
+            }
         }
         // displayed user index chosen.
         let randomIndex = Math.floor(Math.random() * 5)
@@ -72,9 +69,9 @@ const GuessScreen = ({ navigation, route }: any) => {
 
     const onClickChoose = () => {
         if (selectedUser === chosenUser?.id) {
-            navigation.push('Congrats', { user: chosenUser })
+            navigation.push('Congrats', { chosenUser: chosenUser })
         } else {
-            navigation.push("Wrong", { user: chosenUser, newUsers: newUsers })
+            navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
         }
     }
 

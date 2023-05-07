@@ -5,7 +5,7 @@ import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 
 const CongratsScreen = ({ navigation, route }) => {
-    const { user }: { user: User } = route.params
+    const { chosenUser }: { chosenUser: User } = route.params
     useEffect(() =>
         navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
@@ -18,23 +18,21 @@ const CongratsScreen = ({ navigation, route }) => {
             style={styles.backgroundImage}
         >
             <LinearGradient
-                start={{x: 0, y: 0.6}} end={{x: 0, y: 1}}
+                start={{ x: 0, y: 0.6 }} end={{ x: 0, y: 1 }}
                 colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
                 style={styles.linearGradient}>
-            <View style={styles.mainView}>
-            
-                <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: user?.imageUrl }}
-                    />
-                    <View style={styles.textContainer}>
-                        <Text style={styles.instagramHeadline}>Instagram</Text>
-                        <Text style={styles.instagramText}>{user?.instagram}</Text>
-                    </View>
-                </View>
+                <View style={styles.mainView}>
 
-             
+                    <View style={styles.imageContainer}>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: chosenUser?.imageUrl }}
+                        />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.instagramHeadline}>Instagram</Text>
+                            <Text style={styles.instagramText}>{chosenUser?.instagram}</Text>
+                        </View>
+                    </View>
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
@@ -51,9 +49,7 @@ const CongratsScreen = ({ navigation, route }) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    
-          
-            </View>
+                </View>
             </LinearGradient>
         </ImageBackground>
     );

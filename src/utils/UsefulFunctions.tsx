@@ -1,4 +1,4 @@
- const getBase64FromUrl = async (url: string) => {
+export const getBase64FromUrl = async (url: string) => {
     const data = await fetch(url);
     const blob = await data.blob();
     return new Promise((resolve) => {
@@ -11,4 +11,14 @@
     });
 }
 
-export default getBase64FromUrl
+// last index included. 5 unique random numbers array.
+export const generateRandomNumber = (lastIndex: number, exceptIndexArray: Array<number>) => {
+    let randomNumberArr: Array<number> = [];
+    while (randomNumberArr.length < 1) {
+        let r = Math.floor(Math.random() * (lastIndex + 1))
+        if (exceptIndexArray.indexOf(r) === -1) {
+            randomNumberArr.push(r);
+        }
+    }
+    return randomNumberArr[0]
+}

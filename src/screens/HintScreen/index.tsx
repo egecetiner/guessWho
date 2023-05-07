@@ -46,20 +46,33 @@ const HintScreen = ({ navigation, route }: any) => {
     await getUniqueId().then((item) => setDeviceId(item))
   }
 
-  const createProfile = async () => {
-    setLoading(true)
-    const firebaseUrl = Config.FIREBASE_URL
+  const uploadDummyPicture = async () => {
+    const response = await fetch("https://static.thenounproject.com/png/630737-200.png");
+    const blob = await response.blob();
+    await storage().ref(deviceId).put(blob)
+  }
+
+  const uploadPicture = async () => {
     try {
-      let collectionSize = await (await firestore().collection('Users').get()).size
       if (image) {
         await storage().ref(deviceId).putFile(image);
       } else {
-        const response = await fetch("https://static.thenounproject.com/png/630737-200.png");
-        const blob = await response.blob();
-        await storage().ref(deviceId).put(blob)
+        uploadDummyPicture()
       }
+    } catch {
+      uploadDummyPicture()
+    }
+  }
+
+  const createProfile = async () => {
+    setLoading(true)
+    const firebaseUrl = Config.FIREBASE_URL
+    uploadPicture()
+
+    try {
+      let collectionSize = await (await firestore().collection('Users').get()).size
       await firestore().collection('Users').doc(deviceId).set({
-        documentIndex: collectionSize, // new document index is equal to collection size
+        documentIndex: collectionSize, // new doc index is equal to collection size
         id: deviceId,
         imageUrl: `${firebaseUrl}/o/${deviceId}?alt=media`,
         instagram: instagram,
@@ -82,7 +95,7 @@ const HintScreen = ({ navigation, route }: any) => {
         <KeyboardAvoidingView
           style={styles.mainView}
           behavior={"height"}
-          keyboardVerticalOffset={100}>
+          keyboardVerticalOffset={50}>
 
           {!isKeyboardVisible &&
             <>

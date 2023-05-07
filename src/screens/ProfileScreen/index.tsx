@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, TouchableOpacity, View, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import React, { useContext, useEffect, useState } from 'react';
+import { ImageBackground, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { getUniqueId } from 'react-native-device-info';
 import styles from './styles';
-import { User } from '../../utils/Types';
-import getBase64FromUrl from '../../utils/UsefulFunctions';
+import { getBase64FromUrl } from '../../utils/UsefulFunctions';
 import Loading from '../../utils/Loading';
+import { UserContext } from '../../context/UserContext';
 
 const ProfileScreen = ({ navigation }: any) => {
+    const { user, setUser } = useContext(UserContext)
     const [loading, setLoading] = useState<boolean>(false)
-    const [user, setUser] = useState<User>(undefined)
     const [base64Image, setBase64Image] = useState<string>("")
 
     useEffect(() =>
@@ -24,21 +23,22 @@ const ProfileScreen = ({ navigation }: any) => {
     const fetchData = async () => {
         setLoading(true)
         await getUniqueId().then(async (item) => {
-            try {
-                await firestore().collection('Users').doc(item).get().then(async (data) => {
-                    let newUser = data.data()
-                    if (newUser) {
-                        setUser(newUser)
+            await firestore().collection('Users').doc(item).get().then(async (data) => {
+                let newUser = data.data()
+                if (newUser) {
+                    setUser(newUser)
+                    try {
                         await getBase64FromUrl(newUser?.imageUrl).then((result: any) => {
                             setBase64Image(result)
                         })
-                    } else {
-                        navigation.push('Intro')
                     }
-                })
-            } catch {
-                navigation.push('Intro')
-            }
+                    catch {
+                        console.warn("Image is not possible to convert base64")
+                    }
+                } else {
+                    navigation.push('Intro')
+                }
+            })
         }).finally(() => {
             setLoading(false)
         })
@@ -53,7 +53,7 @@ const ProfileScreen = ({ navigation }: any) => {
     }
 
     const onClickUpdate = () => {
-        navigation.push('ProfileUpdate', { user: user, base64Image: base64Image })
+        navigation.push('ProfileUpdate', { base64Image: base64Image })
     }
     const onClickGuess = () => {
         navigation.jumpTo('GuessStack');
@@ -69,8 +69,8 @@ const ProfileScreen = ({ navigation }: any) => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.imageContainer}>
                         <Image
-                            style={styles.image}
-                            source={base64Image ? { uri: base64Image }: require("../../assets/addUser.png")}
+                            style={base64Image ? styles.image : styles.emptyImage}
+                            source={base64Image ? { uri: base64Image } : require("../../assets/User.png")}
                         />
                     </View>
                     <Text style={styles.instaText}>{user?.instagram}</Text>

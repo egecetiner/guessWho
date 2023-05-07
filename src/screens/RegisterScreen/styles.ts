@@ -11,9 +11,9 @@ const styles = StyleSheet.create({
     },
     image: {
         borderWidth: 2,
-        borderRadius: 80,
-        width: 200,
-        height: 200,
+        borderRadius: 60,
+        width: 150,
+        height: 150,
     },
     imageContainer: {
         backgroundColor: "#e0e0e0",
@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderWidth: 2,
         alignSelf: "center",
-        height: 200,
-        width: 200,
-        borderRadius: 80,
+        height: 150,
+        width: 150,
+        borderRadius: 60,
         marginTop: 40
     },
     textInput: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     emptyImage: {
-        width: 100,
+        width: 80,
         resizeMode: 'contain',
     },
     buttonText: {
