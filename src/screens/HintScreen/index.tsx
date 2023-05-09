@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Alert, Keyboard, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { getUniqueId } from 'react-native-device-info';
 import storage from '@react-native-firebase/storage';
@@ -7,6 +7,7 @@ import HintInput from '../../utils/HintInput';
 import styles from './styles';
 import Config from "react-native-config";
 import Loading from '../../utils/Loading';
+import { UserContext } from '../../context/UserContext';
 
 const HintScreen = ({ navigation, route }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -18,7 +19,9 @@ const HintScreen = ({ navigation, route }: any) => {
   const [deviceId, setDeviceId] = useState<string>("")
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 
-  const { instagram, image }: { instagram: string, image: string } = route.params
+  const { setUser } = useContext(UserContext)
+
+  const { instagram, imagePath, imageBase64 }: { instagram: string, imagePath: string, imageBase64: string } = route.params
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -46,42 +49,49 @@ const HintScreen = ({ navigation, route }: any) => {
     await getUniqueId().then((item) => setDeviceId(item))
   }
 
-  const uploadDummyPicture = async () => {
-    const response = await fetch("https://static.thenounproject.com/png/630737-200.png");
-    const blob = await response.blob();
-    await storage().ref(deviceId).put(blob)
-  }
-
-  const uploadPicture = async () => {
-    try {
-      if (image) {
-        await storage().ref(deviceId).putFile(image);
-      } else {
-        uploadDummyPicture()
-      }
-    } catch {
-      uploadDummyPicture()
-    }
-  }
-
   const createProfile = async () => {
-    setLoading(true)
-    const firebaseUrl = Config.FIREBASE_URL
-    uploadPicture()
-
-    try {
-      let collectionSize = await (await firestore().collection('Users').get()).size
-      await firestore().collection('Users').doc(deviceId).set({
-        documentIndex: collectionSize, // new doc index is equal to collection size
-        id: deviceId,
-        imageUrl: `${firebaseUrl}/o/${deviceId}?alt=media`,
-        instagram: instagram,
-        hints: [hint1, hint2, hint3, hint4, hint5],
-      }).then(() => {
-        navigation.push('TabNav')
-      });
-    } catch (e) {
-      navigation.push('Intro')
+    if (!hint1 || !hint2 || !hint3 || !hint4 || !hint5) {
+      Alert.alert(
+        'Error',
+        "Please provide five hints about you.",
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ]
+      );
+    } else {
+      setLoading(true)
+      const firebaseUrl = Config.FIREBASE_URL
+      try {
+        await storage().ref(deviceId).putFile(imagePath);
+        let collectionSize = await (await firestore().collection('Users').get()).size
+        let newUser = {
+          documentIndex: collectionSize, // new doc index is equal to collection size
+          id: deviceId,
+          imageUrl: `${firebaseUrl}/o/${deviceId}?alt=media`,
+          instagram: instagram,
+          hints: [hint1, hint2, hint3, hint4, hint5],
+        }
+        await firestore().collection('Users').doc(deviceId).set(newUser).then(() => {
+          newUser.imageUrl = imageBase64
+          setUser(newUser)
+          setLoading(false)
+          Alert.alert(
+            'Congratulations!',
+            "Your profile has been created.",
+            [
+              { text: 'Start guessing people!', onPress: () => navigation.push('TabNav') },
+            ]
+          );
+        });
+      } catch (e) {
+        Alert.alert(
+          'Error',
+          "We regret to inform you that the profile creation process has failed.",
+          [
+            { text: 'OK', onPress: () => navigation.push('Register') },
+          ]
+        );
+      }
     }
   }
 
@@ -120,7 +130,6 @@ const HintScreen = ({ navigation, route }: any) => {
 
           <TouchableOpacity
             style={styles.btn}
-            disabled={(!hint1 || !hint2 || !hint3 || !hint4 || !hint5)}
             onPress={createProfile}>
             <Text
               style={{

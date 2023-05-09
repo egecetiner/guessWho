@@ -5,19 +5,19 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import styles from './styles';
 import HintInput from '../../utils/HintInput';
-import Loading from '../../utils/Loading';
 import { UserContext } from '../../context/UserContext';
+import Loading from '../../utils/Loading';
 
-const UpdateScreen = ({ route, navigation }: any) => {
-  const { base64Image }: { base64Image: string } = route.params
-  const { user } = useContext(UserContext)
+const UpdateScreen = ({ navigation }: any) => {
+  const { user, setUser } = useContext(UserContext)
   const [username, setUsername] = useState(user?.instagram);
   const [hint1, setHint1] = useState(user?.hints[0]);
   const [hint2, setHint2] = useState(user?.hints[1]);
   const [hint3, setHint3] = useState(user?.hints[2]);
   const [hint4, setHint4] = useState(user?.hints[3]);
   const [hint5, setHint5] = useState(user?.hints[4]);
-  const [image, setImage] = useState<string>("");
+  const [imagePath, setImagePath] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string | undefined | null>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 
@@ -42,16 +42,52 @@ const UpdateScreen = ({ route, navigation }: any) => {
   }, []);
 
   const updateProfile = async () => {
-    setLoading(true)
-    if (!!image) {
-      await storage().ref(user?.id).putFile(image);
+    if (!hint1 || !hint2 || !hint3 || !hint4 || !hint5 || !username) {
+      Alert.alert(
+        'Error',
+        "You need to provide an instagram username and hints about yourself.",
+        [
+          { text: 'OK', onPress: () => console.log("ok") },
+        ]
+      )
+    } else {
+      setLoading(true)
+      try {
+        if (!!imagePath) {
+          await storage().ref(user?.id).putFile(imagePath);
+        }
+        await firestore().collection('Users').doc(user?.id).update({
+          instagram: username,
+          hints: [hint1, hint2, hint3, hint4, hint5],
+        }).then(() => {
+          setUser({
+            documentIndex: user?.documentIndex,
+            id: user?.id,
+            imageUrl: imageBase64 !== "" ? imageBase64 : user?.imageUrl,
+            instagram: username,
+            hints: [hint1, hint2, hint3, hint4, hint5],
+          })
+        }).finally(() => {
+          setLoading(false)
+          Alert.alert(
+            'Congratulations!',
+            "Your profile has been updated.",
+            [
+              { text: 'OK', onPress: () => navigation.push('Profile') },
+            ]
+          )
+        })
+      } catch {
+        setLoading(false)
+        Alert.alert(
+          'Error',
+          "We regret to inform you that the profile update process has failed.",
+          [
+            { text: 'OK', onPress: () => navigation.push('Profile') },
+          ]
+        );
+      }
     }
-    await firestore().collection('Users').doc(user?.id).update({
-      instagram: username,
-      hints: [hint1, hint2, hint3, hint4, hint5],
-    }).then(() => {
-      navigation.push('TabNav')
-    });
   }
 
   const choosePhotoFromLibrary = () => {
@@ -60,6 +96,7 @@ const UpdateScreen = ({ route, navigation }: any) => {
       mediaType: 'photo',
       height: 200,
       width: 200,
+      includeBase64: true
     }).then((im) => {
       if (im.size > 6000000) {
         Alert.alert(
@@ -70,10 +107,65 @@ const UpdateScreen = ({ route, navigation }: any) => {
           ]
         );
       } else {
-        setImage(im.path)
+        setImagePath(im.path)
+        setImageBase64(`data:image/jpeg;base64,${im.data}`)
       }
     }).catch(() => console.log("Canceled"))
   };
+
+  const onPressDelete = () => {
+    Alert.alert('Confirmation', 'Kindly confirm your intention to proceed with the deletion of your profile.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+      },
+      {
+        text: 'Delete', onPress: deleteProfile
+      },
+    ])
+  }
+
+  const deleteProfile = async () => {
+    setLoading(true)
+    try {
+      let biggestIndex = 0
+      let biggestIndexId;
+      await firestore().collection('Users').get().then((usersArray) => {
+        usersArray.docs.forEach((oneUser) => {
+          if (oneUser.data().documentIndex > biggestIndex) {
+            biggestIndex = oneUser.data().documentIndex
+            biggestIndexId = oneUser.data().id
+          }
+        })
+      })
+      await firestore().collection('Users').doc(biggestIndexId).update({
+        documentIndex: user?.documentIndex,
+      })
+      await storage().ref(user?.id).delete();
+      await firestore().collection('Users').doc(user?.id).delete()
+        .then(() => {
+          setUser(undefined)
+          setLoading(false)
+          Alert.alert(
+            'Information',
+            "Your profile has been successfully deleted.",
+            [
+              { text: 'OK', onPress: () => navigation.jumpTo('GuessStack') },
+            ]
+          );
+        });
+    } catch {
+      setLoading(false)
+      Alert.alert(
+        'Information',
+        "We regret to inform you that the profile deletion process has failed. Please contact us via email for further assistance.",
+        [
+          { text: 'OK', onPress: () => navigation.jumpTo('GuessStack') },
+        ]
+      );
+    }
+   
+  }
 
   if (loading) {
     return (
@@ -87,14 +179,13 @@ const UpdateScreen = ({ route, navigation }: any) => {
           behavior={"height"}
           keyboardVerticalOffset={30}
         >
-
           {!isKeyboardVisible &&
             <TouchableOpacity
               onPress={choosePhotoFromLibrary}
               style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{ uri: image !== "" ? image : base64Image }} />
+                source={{ uri: imagePath !== "" ? imagePath : user?.imageUrl }} />
             </TouchableOpacity>
           }
 
@@ -124,17 +215,28 @@ const UpdateScreen = ({ route, navigation }: any) => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableOpacity
-            style={
-              styles.btn
-            }
-            disabled={(!hint1 || !hint2 || !hint3 || !hint4 || !hint5 || !username)}
-            onPress={updateProfile}>
-            <Text
-              style={styles.btnText}>
-              EDIT PROFILE
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={
+                styles.btn
+              }
+              onPress={updateProfile}>
+              <Text
+                style={styles.btnText}>
+                EDIT PROFILE
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                [styles.btn, { marginLeft: 10, backgroundColor: "#C41E3A" }]
+              }
+              onPress={onPressDelete}>
+              <Text
+                style={styles.btnText}>
+                DELETE PROFILE
+              </Text>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
       </View>
     )

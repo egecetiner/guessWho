@@ -32,13 +32,18 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     btn: {
-        marginVertical: 20,
-        marginHorizontal: 5,
+        flex: 1,
         height: 50,
         borderRadius: 12,
         backgroundColor: '#CE6B35',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    buttonsContainer: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 10,
+        flexDirection: "row"
     },
     text: {
         marginRight: 5,

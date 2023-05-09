@@ -4,7 +4,6 @@ const styles = StyleSheet.create({
     mainView: {
         flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 20,
         backgroundColor: "white",
         borderTopWidth: 2
     },
@@ -15,6 +14,7 @@ const styles = StyleSheet.create({
         height: 150,
     },
     imageContainer: {
+        marginTop: 20,
         alignItems: "center",
         justifyContent: "center",
         alignSelf: "center",
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     btn: {
-        marginHorizontal: 5,
         flex: 1,
         height: 50,
         borderRadius: 12,
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonsContainer: {
-        marginVertical: 20,
+        marginVertical: 10,
         flexDirection: "row"
     },
     buttonText: {

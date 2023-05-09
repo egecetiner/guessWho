@@ -3,9 +3,8 @@ import { User } from '../utils/Types';
 
 interface UserContext {
     user: User
-    setUser: Dispatch<SetStateAction<User>>;
+    setUser: Dispatch<SetStateAction<User>>
 }
-
 
 export const UserContext = createContext<UserContext>({} as UserContext);
 

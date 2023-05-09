@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ImageBackground, Text, TouchableOpacity, View, Image, FlatList, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ImageBackground, Text, TouchableOpacity, View, Image, FlatList, ScrollView, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { User } from '../../utils/Types';
@@ -7,6 +7,7 @@ import styles from './styles';
 import Loading from '../../utils/Loading';
 import { UserContext } from '../../context/UserContext';
 import { getBase64FromUrl, generateRandomNumber } from '../../utils/UsefulFunctions'
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const GuessScreen = ({ navigation, route }: any) => {
     const { user } = useContext(UserContext)
@@ -14,6 +15,8 @@ const GuessScreen = ({ navigation, route }: any) => {
     const [chosenUser, setChosenUser] = useState<User>(undefined);
     const [newUsers, setNewUsers] = useState<Array<User>>();
     const [selectedUser, setSelectedUser] = useState<User>(undefined)
+    const [scrollDown, setScrollDown] = useState<boolean>(false)
+    const scrollViewRef: any = useRef();
 
     useEffect(() => {
         navigation.addListener('beforeRemove', (e: any) => {
@@ -68,18 +71,44 @@ const GuessScreen = ({ navigation, route }: any) => {
     }
 
     const onClickChoose = () => {
-        if (selectedUser === chosenUser?.id) {
-            navigation.push('Congrats', { chosenUser: chosenUser })
+        if (user) {
+            if (selectedUser === chosenUser?.id) {
+                navigation.push('Congrats', { chosenUser: chosenUser })
+            } else {
+                navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
+            }
         } else {
-            navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
+            Alert.alert('Registration required', 'We regret to inform you that in order to play the game, registration is necessary.', [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                },
+                { text: 'Register', onPress: () => navigation.push("Register") },
+            ])
         }
+    }
+
+    const onClickScroll = () => {
+        if (scrollDown) {
+            scrollViewRef.current?.scrollTo({
+                y: 0,
+                animated: true,
+            });
+        } else {
+            scrollViewRef.current.scrollToEnd({ animated: true })
+        }
+        setScrollDown(!scrollDown)
     }
 
     const Item = ({ item }: { item: User }) => {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    setSelectedUser(item?.id)
+                    if (selectedUser === item?.id) {
+                        setSelectedUser(undefined)
+                    } else {
+                        setSelectedUser(item?.id)
+                    }
                 }}
                 style={styles.imageContainer}>
                 <Image
@@ -99,6 +128,29 @@ const GuessScreen = ({ navigation, route }: any) => {
         )
     }
 
+    const FooterButton = () => {
+        return (
+            <View style={styles.buttonContainer}>
+                {
+                    selectedUser ?
+                        <TouchableOpacity
+                            style={styles.btn}
+                            disabled={!selectedUser}
+                            onPress={onClickChoose}>
+                            <Text style={styles.buttonText}>
+                                CHOOSE
+                            </Text>
+                        </TouchableOpacity> :
+                        <TouchableOpacity
+                            style={styles.btn}
+                            onPress={onClickScroll}>
+                            <Entypo name={scrollDown ? 'chevron-up' : 'chevron-down'} color={"white"} size={35} style={{ alignSelf: "center" }} />
+                        </TouchableOpacity>
+                }
+            </View>
+        )
+    }
+
     if (loading) {
         return (
             <Loading />
@@ -107,6 +159,7 @@ const GuessScreen = ({ navigation, route }: any) => {
         return (
             <View style={styles.mainView}>
                 <ScrollView
+                    ref={scrollViewRef}
                     showsVerticalScrollIndicator={false}>
                     <ImageBackground
                         source={require('../../assets/Notebook.png')}
@@ -117,9 +170,10 @@ const GuessScreen = ({ navigation, route }: any) => {
                         })}
                     </ImageBackground>
 
-                    <Text style={styles.textBold}>Guess who
-                        <Text style={{ fontWeight: "normal" }}> belongs to hints?</Text>
+                    <Text style={styles.textBold}>
+                        Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
                     </Text>
+                    <Text>Please select a person to continue.</Text>
 
                     <FlatList
                         keyExtractor={(item) => item?.id}
@@ -130,19 +184,7 @@ const GuessScreen = ({ navigation, route }: any) => {
                         renderItem={({ item }) => <Item item={item} />}
                     />
                 </ScrollView>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={
-                            styles.btn
-                        }
-                        disabled={!selectedUser}
-                        onPress={onClickChoose}>
-                        <Text
-                            style={styles.buttonText}>
-                            CHOOSE
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <FooterButton />
             </View>
         )
     }

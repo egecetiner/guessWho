@@ -5,7 +5,8 @@ import styles from './styles';
 
 const RegisterScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState<string>("");
-  const [image, setImage] = useState<string>("");
+  const [imagePath, setImagePath] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string | undefined | null>("");
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -45,13 +46,24 @@ const RegisterScreen = ({ navigation }: any) => {
           ]
         );
       } else {
-        setImage(im.path)
+        setImagePath(im.path)
+        setImageBase64(`data:image/jpeg;base64,${im.data}`)
       }
     }).catch(() => console.log("Canceled"))
   };
 
   const buttonOnPress = () => {
-    navigation.push('Hints', { instagram: username, image: image })
+    if (!username || !imagePath) {
+      Alert.alert(
+        'Error',
+        "Please upload a photo and provide your instagram username.",
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ]
+      );
+    } else {
+      navigation.push('Hints', { instagram: username, imagePath: imagePath, imageBase64: imageBase64 })
+    }
   }
 
   return (
@@ -63,8 +75,8 @@ const RegisterScreen = ({ navigation }: any) => {
           <Text style={styles.step1Text}>Step 1: Upload a photo of yourself </Text>
           <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.imageContainer}>
             <Image
-              style={!!image ? styles.image : styles.emptyImage}
-              source={!!image ? { uri: image } : require('../../assets/addUser.png')}
+              style={!!imagePath ? styles.image : styles.emptyImage}
+              source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
             />
           </TouchableOpacity>
         </>
@@ -89,7 +101,6 @@ const RegisterScreen = ({ navigation }: any) => {
         style={
           styles.btn
         }
-        disabled={(!username)}
         onPress={buttonOnPress}>
         <Text
           style={styles.buttonText}>
