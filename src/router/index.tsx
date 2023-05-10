@@ -23,7 +23,9 @@ const Router = () => {
 
   useEffect(() => {
     setColorScheme(Appearance.getColorScheme())
-    fetchData()
+    if (!user) {
+      fetchData()
+    }
   }, []);
 
   const BlackTheme = {
@@ -92,7 +94,6 @@ const Router = () => {
             options={{
               headerShown: true,
               headerTitle: () => <CustomHeader />,
-              headerBackTitle: ""
             }} />
           <Stack.Screen
             name="Hints"

@@ -10,10 +10,22 @@ export type SlideProps = {
     }
 };
 
+export type Gender = "Male" | "Female" | "Non-Binary/Other" | "Prefer Not to Say"
+
 export type User = {
     documentIndex: number,
     hints: Array<string>,
     id: string,
     imageUrl: string,
-    instagram: string
+    instagram: string,
+    genderPreferences: Array<Gender>,
+    gender: Gender
 } | FirebaseFirestoreTypes.DocumentData | undefined
+
+export type HintRouteParams = {
+    instagram: string,
+    imagePath: string,
+    imageBase64: string,
+    gender: Gender,
+    genderPreferences: Array<Gender>
+}

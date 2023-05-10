@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native"
+import { Dimensions, StyleSheet } from 'react-native';
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 20,
-        backgroundColor: "white",
+        paddingTop: 10,
         borderTopWidth: 2
     },
     image: {
@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
         height: 50,
         padding: 10,
         fontSize: 20,
-        textAlign: "center"
+        textAlign: "center",
+        backgroundColor: "#C0BBB5",
     },
     btn: {
         flex: 1,
@@ -42,7 +43,8 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 10,
+        marginTop: 30,
+        marginBottom: 10,
         flexDirection: "row"
     },
     text: {
@@ -55,14 +57,11 @@ const styles = StyleSheet.create({
         fontWeight: "normal"
     },
     textInputContainer: {
-        marginVertical: 15,
         justifyContent: "center"
     },
     hintsContainer: {
-        flex: 1,
-        marginTop: 20,
-        paddingHorizontal: 40,
-        justifyContent: "space-between",
+        marginTop: 10,
+        paddingHorizontal: 20,
         width: "90%"
     },
     btnText: {
@@ -85,7 +84,47 @@ const styles = StyleSheet.create({
         height: 20,
         fontSize: 18,
         borderBottomWidth: 1
-    }
+    },
+    linearGradient: {
+        height: '100%',
+        width: '100%'
+      },
+      backgroundImage: {
+        flex: 1,
+        width: width
+      },
+      contentContainer: { 
+        flexGrow: 1, 
+        flexDirection: 'column', 
+        justifyContent: 'space-between'
+      },
+      dropdownBox: {
+        borderColor: "black",
+        borderWidth: 2,
+        backgroundColor: "#C0BBB5",
+        marginBottom: 0
+    },
+    dropdownInput: {
+        fontSize: 20,
+        color: "black"
+    },
+    dropdown: {
+        borderColor: "black",
+        borderWidth: 2,
+        backgroundColor: "#C0BBB5"
+    },
+    dropdownText: {
+        fontSize: 20
+    },
+    step2Text: {
+        fontSize: 20,
+        marginTop: 15,
+        marginBottom: 5
+    },
+    step1Text: {
+        fontSize: 20,
+        marginBottom: 15
+    },
 })
 
 export default styles

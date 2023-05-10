@@ -3,7 +3,7 @@ export default [
         id: '1',
         image: require('../../assets/Landing1.png'),
         title: 'Register',
-        subtitle: 'Upload a photo of yourself and provide your Instagram username.',
+        subtitle: 'Upload a photo of yourself, along with your Instagram username and your gender, to help us create a personalized and inclusive experience for you.',
     },
     {
         id: '2',

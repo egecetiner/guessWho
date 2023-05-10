@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from 'react-native';
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
         paddingHorizontal: 20,
-        backgroundColor: "white",
         borderTopWidth: 2
     },
     image: {
@@ -52,9 +52,10 @@ const styles = StyleSheet.create({
     imageBackground: {
         flex: 1,
         flexGrow: 1,
-        paddingTop: 130,
+        paddingTop: 100,
         marginTop: 20,
-        paddingBottom: 70,
+        paddingBottom: 50,
+        opacity: 0.8,
         paddingHorizontal: "10%",
         justifyContent: "space-evenly"
     },
@@ -76,6 +77,14 @@ const styles = StyleSheet.create({
         width: 80,
         height: 150,
         resizeMode: 'contain'
+    },
+    linearGradient: {
+        height: '100%',
+        width: '100%'
+    },
+    backgroundImage: {
+        flex: 1,
+        width: width
     },
 })
 

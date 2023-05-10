@@ -1,22 +1,34 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
         paddingHorizontal: 20,
         paddingTop: 20,
-        margin: 0,
-        backgroundColor: "white",
         borderTopWidth: 2
     },
+    contentContainer: { 
+        flexGrow: 1, 
+        flexDirection: 'column', 
+        justifyContent: 'space-between'
+      },
     image: {
         borderWidth: 2,
         borderRadius: 60,
         width: 150,
         height: 150,
     },
+    linearGradient: {
+        height: '100%',
+        width: '100%'
+    },
+    backgroundImage: {
+        flex: 1,
+        width: width
+    },
     imageContainer: {
-        backgroundColor: "#e0e0e0",
+        backgroundColor: "#C0BBB5",
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
@@ -24,9 +36,10 @@ const styles = StyleSheet.create({
         height: 150,
         width: 150,
         borderRadius: 60,
-        marginTop: 40
+        marginTop: 10,
     },
     textInput: {
+        backgroundColor: "#C0BBB5",
         borderWidth: 2,
         borderRadius: 10,
         height: 50,
@@ -35,7 +48,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     btn: {
-        marginTop: 40,
+        marginTop: 20,
         marginBottom: 40,
         height: 50,
         borderRadius: 12,
@@ -45,6 +58,7 @@ const styles = StyleSheet.create({
     },
     emptyImage: {
         width: 80,
+        height: 80,
         resizeMode: 'contain',
     },
     buttonText: {
@@ -54,12 +68,12 @@ const styles = StyleSheet.create({
     },
     step2Text: {
         fontSize: 20,
-        marginTop: 40,
-        marginBottom: 20
+        marginTop: 15,
+        marginBottom: 5
     },
     step1Text: {
         fontSize: 20,
-        marginTop: 20
+        marginTop: 0
     },
     registerText: {
         fontSize: 30,
@@ -69,7 +83,24 @@ const styles = StyleSheet.create({
     textInputContainer: {
         flex: 1,
         justifyContent: "flex-start",
-        marginTop: 20
+    },
+    dropdownBox: {
+        borderColor: "black",
+        borderWidth: 2,
+        backgroundColor: "#C0BBB5",
+        marginBottom: 0
+    },
+    dropdownInput: {
+        fontSize: 20,
+        color: "black"
+    },
+    dropdown: {
+        borderColor: "black",
+        borderWidth: 2,
+        backgroundColor: "#C0BBB5"
+    },
+    dropdownText: {
+        fontSize: 20
     }
 })
 

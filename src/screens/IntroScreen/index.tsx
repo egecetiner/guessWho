@@ -55,7 +55,7 @@ const IntroScreen = ({ navigation }: any) => {
 
     const onClickButton = () => {
         if (currentSlideIndex == slideData.length - 1) {
-            navigation.push('TabNav', {})
+            navigation.push('Register', {})
         } else {
             goToNextSlide()
         }

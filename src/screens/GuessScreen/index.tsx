@@ -71,20 +71,10 @@ const GuessScreen = ({ navigation, route }: any) => {
     }
 
     const onClickChoose = () => {
-        if (user) {
-            if (selectedUser === chosenUser?.id) {
-                navigation.push('Congrats', { chosenUser: chosenUser })
-            } else {
-                navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
-            }
+        if (selectedUser === chosenUser?.id) {
+            navigation.push('Congrats', { chosenUser: chosenUser })
         } else {
-            Alert.alert('Registration required', 'We regret to inform you that in order to play the game, registration is necessary.', [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                },
-                { text: 'Register', onPress: () => navigation.push("Register") },
-            ])
+            navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
         }
     }
 

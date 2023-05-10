@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from "../screens/ProfileScreen";
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,7 +10,6 @@ import GuessScreen from '../screens/GuessScreen';
 import CongratsScreen from '../screens/CongratsScreen';
 import WrongScreen from '../screens/WrongScreen';
 import { Appearance, ColorSchemeName } from 'react-native';
-import { UserContext } from '../context/UserContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,11 +31,7 @@ const ProfileStack = () => {
             <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}
-                options={{
-                    headerLeft: () => (
-                        null
-                    )
-                }}
+                options={{ headerLeft: () => (null) }}
             />
             <Stack.Screen
                 name="ProfileUpdate"
@@ -67,7 +62,6 @@ const GuessStack = () => {
 }
 
 const BottomTabNavigator = () => {
-    const { user } = useContext(UserContext)
     return (
         <Tab.Navigator
             screenOptions={{
@@ -76,20 +70,15 @@ const BottomTabNavigator = () => {
                 tabBarInactiveTintColor: 'white',
                 tabBarActiveTintColor: '#e47911',
                 tabBarShowLabel: false,
-                tabBarStyle: { backgroundColor: 'black' },
-                tabBarIconStyle: { display: user ? "flex" : "none" }
+                tabBarStyle: { backgroundColor: 'black' }
             }}
-            initialRouteName='GuessStack'
         >
-            {
-                user ? <Tab.Screen name="ProfileStack" component={ProfileStack}
-                    options={{
-                        tabBarIcon: ({ color }) => (
-                            <Entypo name='man' color={color} size={25} />
-                        ),
-                    }} /> : null
-            }
-
+            <Tab.Screen name="ProfileStack" component={ProfileStack}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Entypo name='man' color={color} size={25} />
+                    ),
+                }} />
             <Tab.Screen name="GuessStack"
                 component={GuessStack}
                 options={{

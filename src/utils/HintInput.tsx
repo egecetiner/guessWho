@@ -1,20 +1,23 @@
 import React from "react"
-import { TextInput, View, Text } from "react-native"
+import { TextInput, View, Text, ViewStyle } from "react-native"
 import { StyleSheet } from "react-native"
 
-const HintInput = (
+interface Props {
     value: string,
     placeholder: string,
     onChangeText: (text: string) => void,
-    number: number) => {
+    number: number,
+    containerStyle?: ViewStyle
+}
+const HintInput: React.FC<Props> = ({ value, placeholder, onChangeText, number, containerStyle }) => {
     return (
-        <View style={styles.hintInputContainer}>
+        <View style={[styles.hintInputContainer, containerStyle]}>
             <Text style={styles.number}>{number}. </Text>
             <TextInput
                 value={value}
                 style={styles.hintInputText}
                 placeholder={placeholder}
-                placeholderTextColor={"gray"}
+                placeholderTextColor={"#191919"}
                 onChangeText={onChangeText}
             />
         </View>
@@ -36,7 +39,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 20,
         fontSize: 18,
-        borderBottomWidth: 1
+        borderBottomWidth: 2
     }
 })
 

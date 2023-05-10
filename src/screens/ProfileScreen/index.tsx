@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { ImageBackground, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import styles from './styles';
 import { UserContext } from '../../context/UserContext';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProfileScreen = ({ navigation }: any) => {
     const { user } = useContext(UserContext)
@@ -28,6 +29,15 @@ const ProfileScreen = ({ navigation }: any) => {
     }
 
     return (
+        <ImageBackground
+        source={require("../../assets/Profile.jpg")}
+        resizeMode="cover"
+        style={styles.backgroundImage}
+      >
+        <LinearGradient
+          start={{ x: 0, y: 0.4}} end={{ x: 0, y: 1 }}
+          colors={['rgba(255, 255, 255, 0.4)', 'rgba(0, 0, 0, 1)']}
+          style={styles.linearGradient}>
         <View style={styles.mainView}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.imageContainer}>
@@ -39,7 +49,7 @@ const ProfileScreen = ({ navigation }: any) => {
                 <Text style={styles.instaText}>{user?.instagram}</Text>
                 <ImageBackground
                     source={require('../../assets/Notebook.png')}
-                    resizeMode="cover"
+                    resizeMode="contain"
                     style={styles.imageBackground}
                 >
                     {user?.hints.map((hint: string, index: number) => {
@@ -71,6 +81,8 @@ const ProfileScreen = ({ navigation }: any) => {
                 </TouchableOpacity>
             </View>
         </View>
+        </LinearGradient>
+    </ImageBackground>
     );
 }
 
