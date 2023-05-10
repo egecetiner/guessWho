@@ -99,7 +99,6 @@ const HintScreen = ({ navigation, route }: any) => {
     )
   } else {
     return (
-
       <ImageBackground
         source={require("../../assets/Hint.jpg")}
         resizeMode="cover"

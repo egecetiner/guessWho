@@ -26,8 +26,9 @@ const UpdateScreen = ({ navigation }: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState<string>(user?.gender);
-  const [selectedGuess, setSelectedGuess] = React.useState(user?.genderPreferences);
+  const [selectedGuess, setSelectedGuess] = useState([]);
 
+  console.log(selectedGuess)
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -75,8 +76,8 @@ const UpdateScreen = ({ navigation }: any) => {
             imageUrl: imageBase64 !== "" ? imageBase64 : user?.imageUrl,
             instagram: username,
             hints: [hint1, hint2, hint3, hint4, hint5],
-            gender: user?.gender,
-            genderPreferences: user?.genderPreferences
+            gender: selectedGender,
+            genderPreferences: selectedGuess
           })
         }).finally(() => {
           setLoading(false)
@@ -244,8 +245,8 @@ const UpdateScreen = ({ navigation }: any) => {
 
                   <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
                   <MultipleSelectList
-                    setSelected={(val) => setSelectedGuess(val)}
                     placeholder={selectedGuess.toString()}
+                    setSelected={(val) => setSelectedGuess(val)}
                     data={guessData}
                     save="value"
                     label="Select the Gender You Prefer to Guess"

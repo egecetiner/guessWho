@@ -86,13 +86,13 @@ const RegisterScreen = ({ navigation }: any) => {
       style={styles.backgroundImage}
     >
       <LinearGradient
-        start={{ x: 0, y: 0.5}} end={{ x: 0, y: 1 }}
+        start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
         colors={['rgba(255, 255, 255, 0.3)', 'rgba(0, 0, 0, 1)']}
         style={styles.linearGradient}>
 
         <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        style={styles.mainView}>
+          contentContainerStyle={styles.contentContainer}
+          style={styles.mainView}>
           <Text style={styles.registerText}>REGISTER</Text>
 
           {!isKeyboardVisible &&
@@ -104,35 +104,35 @@ const RegisterScreen = ({ navigation }: any) => {
                   source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
                 />
               </TouchableOpacity>
+
+              <Text style={styles.step2Text}>Gender Identity</Text>
+              <SelectList
+                setSelected={(val) => setSelectedGender(val)}
+                data={genderData}
+                save="value"
+                boxStyles={styles.dropdownBox}
+                inputStyles={styles.dropdownInput}
+                search={false}
+                arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+                dropdownStyles={styles.dropdown}
+                dropdownTextStyles={styles.dropdownText}
+              />
+
+              <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
+              <MultipleSelectList
+                setSelected={(val) => setSelectedGuess(val)}
+                data={guessData}
+                save="value"
+                label="Select the Gender You Prefer to Guess"
+                boxStyles={styles.dropdownBox}
+                inputStyles={styles.dropdownInput}
+                search={false}
+                arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+                dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
+                dropdownTextStyles={styles.dropdownText}
+              />
             </>
           }
-
-          <Text style={styles.step2Text}>Gender Identity</Text>
-          <SelectList
-            setSelected={(val) => setSelectedGender(val)}
-            data={genderData}
-            save="value"
-            boxStyles={styles.dropdownBox}
-            inputStyles={styles.dropdownInput}
-            search={false}
-            arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-            dropdownStyles={styles.dropdown}
-            dropdownTextStyles={styles.dropdownText}
-          />
-
-          <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
-          <MultipleSelectList
-            setSelected={(val) => setSelectedGuess(val)}
-            data={guessData}
-            save="value"
-            label="Select the Gender You Prefer to Guess"
-            boxStyles={styles.dropdownBox}
-            inputStyles={styles.dropdownInput}
-            search={false}
-            arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-            dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
-            dropdownTextStyles={styles.dropdownText}
-          />
 
           <Text style={styles.step2Text}>Instagram Username</Text>
           <TouchableWithoutFeedback

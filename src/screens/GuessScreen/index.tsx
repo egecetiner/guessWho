@@ -8,6 +8,7 @@ import Loading from '../../utils/Loading';
 import { UserContext } from '../../context/UserContext';
 import { getBase64FromUrl, generateRandomNumber } from '../../utils/UsefulFunctions'
 import Entypo from 'react-native-vector-icons/Entypo';
+import LinearGradient from 'react-native-linear-gradient';
 
 const GuessScreen = ({ navigation, route }: any) => {
     const { user } = useContext(UserContext)
@@ -45,6 +46,10 @@ const GuessScreen = ({ navigation, route }: any) => {
                     .collection('Users')
                     .where("documentIndex", "==", randomIndex)
                     .get()).docs[0])).data()
+
+                if (!user?.genderPreferences.includes(randomUser.gender) && randomUser.gender !== "Prefer Not to Say") {
+                    continue;
+                }
 
                 await getBase64FromUrl(randomUser?.imageUrl).then((result) => {
                     randomUser.imageUrl = result
@@ -147,35 +152,46 @@ const GuessScreen = ({ navigation, route }: any) => {
         )
     } else {
         return (
-            <View style={styles.mainView}>
-                <ScrollView
-                    ref={scrollViewRef}
-                    showsVerticalScrollIndicator={false}>
-                    <ImageBackground
-                        source={require('../../assets/Notebook.png')}
-                        resizeMode="cover"
-                        style={styles.imageBackground}>
-                        {chosenUser?.hints.map((hint: string, index: number) => {
-                            return (TextInside(hint, index + 1))
-                        })}
-                    </ImageBackground>
+            <ImageBackground
+                source={require("../../assets/Guess.jpg")}
+                resizeMode="cover"
+                style={styles.backgroundImage}
+            >
+                <LinearGradient
+                    start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
+                    colors={['rgba(255, 255, 255, 0.5)', 'rgba(0, 0, 0, 1)']}
+                    style={styles.linearGradient}>
+                    <View style={styles.mainView}>
+                        <ScrollView
+                            ref={scrollViewRef}
+                            showsVerticalScrollIndicator={false}>
+                            <ImageBackground
+                                source={require('../../assets/Notebook.png')}
+                                resizeMode="cover"
+                                style={styles.imageBackground}>
+                                {chosenUser?.hints.map((hint: string, index: number) => {
+                                    return (TextInside(hint, index + 1))
+                                })}
+                            </ImageBackground>
 
-                    <Text style={styles.textBold}>
-                        Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
-                    </Text>
-                    <Text>Please select a person to continue.</Text>
+                            <Text style={styles.textBold}>
+                                Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
+                            </Text>
+                            <Text>Please select a person to continue.</Text>
 
-                    <FlatList
-                        keyExtractor={(item) => item?.id}
-                        style={{ marginVertical: 20 }}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={newUsers}
-                        renderItem={({ item }) => <Item item={item} />}
-                    />
-                </ScrollView>
-                <FooterButton />
-            </View>
+                            <FlatList
+                                keyExtractor={(item) => item?.id}
+                                style={{ marginVertical: 20 }}
+                                showsHorizontalScrollIndicator={false}
+                                horizontal={true}
+                                data={newUsers}
+                                renderItem={({ item }) => <Item item={item} />}
+                            />
+                        </ScrollView>
+                        <FooterButton />
+                    </View>
+                </LinearGradient>
+            </ImageBackground>
         )
     }
 }
