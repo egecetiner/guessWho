@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderWidth: 2,
         backgroundColor: "#C0BBB5",
-        marginBottom: 0
+        marginBottom: 10
     },
     dropdownInput: {
         fontSize: 20,
