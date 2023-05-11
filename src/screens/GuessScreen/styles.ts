@@ -37,10 +37,8 @@ const styles = StyleSheet.create({
     },
     imageBackground: {
         marginTop: 20,
-        flex: 1,
-        flexGrow: 1,
-        paddingTop: 100,
-        paddingBottom: 50,
+        paddingTop: 130,
+        paddingBottom: 70,
         paddingHorizontal: "10%",
         justifyContent: "space-evenly",
         opacity: 0.8
@@ -86,6 +84,15 @@ const styles = StyleSheet.create({
         flex: 1,
         width: width
     },
+    enoughUserTextView: {
+        justifyContent: "center",
+        flex: 0.6
+    },
+    enoughUserText: {
+        fontSize: 20,
+        textAlign: "center",
+        fontWeight: "bold"
+    }
 })
 
 export default styles

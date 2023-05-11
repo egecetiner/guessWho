@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, ImageBackground, Keyboard, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, ImageBackground, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { getUniqueId } from 'react-native-device-info';
 import storage from '@react-native-firebase/storage';
@@ -9,7 +9,6 @@ import Config from "react-native-config";
 import Loading from '../../utils/Loading';
 import { UserContext } from '../../context/UserContext';
 import { HintRouteParams } from '../../utils/Types';
-import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 
 const HintScreen = ({ navigation, route }: any) => {
@@ -65,9 +64,7 @@ const HintScreen = ({ navigation, route }: any) => {
       const firebaseUrl = Config.FIREBASE_URL
       try {
         await storage().ref(deviceId).putFile(imagePath);
-        let collectionSize = await (await firestore().collection('Users').get()).size
         let newUser = {
-          documentIndex: collectionSize, // new doc index is equal to collection size
           id: deviceId,
           imageUrl: `${firebaseUrl}/o/${deviceId}?alt=media`,
           instagram: instagram,
@@ -111,8 +108,8 @@ const HintScreen = ({ navigation, route }: any) => {
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <KeyboardAvoidingView
               style={styles.mainView}
-              behavior={"height"}
-              keyboardVerticalOffset={50}>
+              behavior={"padding"}
+              keyboardVerticalOffset={-10}>
 
               {!isKeyboardVisible &&
                 <>
@@ -127,11 +124,11 @@ const HintScreen = ({ navigation, route }: any) => {
                 onPress={Keyboard.dismiss}
                 accessible={false}>
                 <View style={styles.hintsContainer}>
-                  <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
-                  <HintInput value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
+                  <HintInput  value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
+                  <HintInput   value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
                   <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
                   <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
-                  <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
+                  <HintInput  value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
                 </View>
               </TouchableWithoutFeedback>
 

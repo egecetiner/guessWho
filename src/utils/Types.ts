@@ -13,7 +13,6 @@ export type SlideProps = {
 export type Gender = "Male" | "Female" | "Non-Binary/Other" | "Prefer Not to Say"
 
 export type User = {
-    documentIndex: number,
     hints: Array<string>,
     id: string,
     imageUrl: string,

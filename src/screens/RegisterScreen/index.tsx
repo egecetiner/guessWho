@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ImageBackground, Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, Image, ImageBackground, Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './styles';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { genderData, guessData } from './listDatas';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const RegisterScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState<string>("");
@@ -60,7 +59,8 @@ const RegisterScreen = ({ navigation }: any) => {
   };
 
   const buttonOnPress = () => {
-    if (!username || !imagePath || !selectedGender || !selectedGuess.length) {
+    
+    if (!username || !imagePath || !selectedGender || !selectedGuess.length || !selectedGender || !selectedGuess.length) {
       Alert.alert(
         'Error',
         "Kindly fill in all the required information.",

@@ -57,6 +57,10 @@ const GuessStack = () => {
                 name="Wrong"
                 component={WrongScreen}
             />
+               <Stack.Screen
+                name="ProfileUpdate"
+                component={UpdateScreen}
+            />
         </Stack.Navigator>
     )
 }

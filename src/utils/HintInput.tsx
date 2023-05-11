@@ -26,6 +26,7 @@ const HintInput: React.FC<Props> = ({ value, placeholder, onChangeText, number, 
 
 const styles = StyleSheet.create({
     hintInputContainer: {
+        marginBottom: 10,
         flex: 1,
         flexDirection: "row",
         justifyContent: 'space-between'
@@ -33,13 +34,14 @@ const styles = StyleSheet.create({
     number: {
         marginRight: 10,
         fontSize: 20,
-        fontWeight: "bold"
+        height: 30,
+        fontWeight: "bold",
     },
     hintInputText: {
-        width: "100%",
-        height: 20,
+        flex: 1,
+        height: 25,
         fontSize: 18,
-        borderBottomWidth: 2
+        borderBottomWidth: 2,
     }
 })
 

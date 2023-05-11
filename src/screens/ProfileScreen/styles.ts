@@ -50,14 +50,11 @@ const styles = StyleSheet.create({
         fontWeight: "normal"
     },
     imageBackground: {
-        flex: 1,
-        flexGrow: 1,
         paddingTop: 100,
         marginTop: 20,
         paddingBottom: 50,
         opacity: 0.8,
         paddingHorizontal: "10%",
-        justifyContent: "space-evenly"
     },
     instaText: {
         fontSize: 20,

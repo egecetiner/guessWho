@@ -12,13 +12,11 @@ export const getBase64FromUrl = async (url: string) => {
 }
 
 // last index included. 5 unique random numbers array.
-export const generateRandomNumber = (lastIndex: number, exceptIndexArray: Array<number>) => {
+export const generateRandomNumber = (lastIndex: number) => {
     let randomNumberArr: Array<number> = [];
     while (randomNumberArr.length < 1) {
         let r = Math.floor(Math.random() * (lastIndex + 1))
-        if (exceptIndexArray.indexOf(r) === -1) {
             randomNumberArr.push(r);
-        }
     }
     return randomNumberArr[0]
 }

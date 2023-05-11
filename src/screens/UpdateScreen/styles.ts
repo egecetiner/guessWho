@@ -3,7 +3,6 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     mainView: {
-        flex: 1,
         paddingHorizontal: 20,
         paddingTop: 10,
         borderTopWidth: 2
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
     hintsContainer: {
         marginTop: 10,
         paddingHorizontal: 20,
-        width: "90%"
+        flex: 1
     },
     btnText: {
         fontWeight: 'bold',
@@ -118,8 +117,6 @@ const styles = StyleSheet.create({
     },
     step2Text: {
         fontSize: 20,
-        marginTop: 15,
-        marginBottom: 5
     },
     step1Text: {
         fontSize: 20,

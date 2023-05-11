@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Keyboard, KeyboardAvoidingView, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground } from 'react-native';
+import { Alert, Keyboard, KeyboardAvoidingView, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground, ScrollView } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -7,7 +7,6 @@ import styles from './styles';
 import HintInput from '../../utils/HintInput';
 import { UserContext } from '../../context/UserContext';
 import Loading from '../../utils/Loading';
-import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list';
 import { genderData, guessData } from '../RegisterScreen/listDatas';
@@ -28,7 +27,6 @@ const UpdateScreen = ({ navigation }: any) => {
   const [selectedGender, setSelectedGender] = useState<string>(user?.gender);
   const [selectedGuess, setSelectedGuess] = useState([]);
 
-  console.log(selectedGuess)
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -71,7 +69,6 @@ const UpdateScreen = ({ navigation }: any) => {
           genderPreferences: selectedGuess
         }).then(() => {
           setUser({
-            documentIndex: user?.documentIndex,
             id: user?.id,
             imageUrl: imageBase64 !== "" ? imageBase64 : user?.imageUrl,
             instagram: username,
@@ -85,7 +82,12 @@ const UpdateScreen = ({ navigation }: any) => {
             'Congratulations!',
             "Your profile has been updated.",
             [
-              { text: 'OK', onPress: () => navigation.push('Profile') },
+              {
+                text: 'OK', onPress: () => {
+                  navigation.push('Profile')
+                  navigation.push("Guess")
+                }
+              },
             ]
           )
         })
@@ -140,19 +142,6 @@ const UpdateScreen = ({ navigation }: any) => {
   const deleteProfile = async () => {
     setLoading(true)
     try {
-      let biggestIndex = 0
-      let biggestIndexId;
-      await firestore().collection('Users').get().then((usersArray) => {
-        usersArray.docs.forEach((oneUser) => {
-          if (oneUser.data().documentIndex > biggestIndex) {
-            biggestIndex = oneUser.data().documentIndex
-            biggestIndexId = oneUser.data().id
-          }
-        })
-      })
-      await firestore().collection('Users').doc(biggestIndexId).update({
-        documentIndex: user?.documentIndex,
-      })
       await storage().ref(user?.id).delete();
       await firestore().collection('Users').doc(user?.id).delete()
         .then(() => {
@@ -199,12 +188,13 @@ const UpdateScreen = ({ navigation }: any) => {
             contentContainerStyle={styles.contentContainer}>
             <KeyboardAvoidingView
               style={styles.mainView}
-              behavior={"height"}
-              keyboardVerticalOffset={30}
+              behavior={"padding"}
+              keyboardVerticalOffset={-200}
             >
-              {!isKeyboardVisible &&
+              {
+                isKeyboardVisible ? null :
                 <>
-                  <Text style={styles.step1Text}>Profile Photo</Text>
+                <Text style={styles.step1Text}>Profile Photo</Text>
                   <TouchableOpacity
                     onPress={choosePhotoFromLibrary}
                     style={styles.imageContainer}>
@@ -214,22 +204,23 @@ const UpdateScreen = ({ navigation }: any) => {
                   </TouchableOpacity>
                 </>
               }
+                  
               <Text style={styles.step2Text}>Hints</Text>
               <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
+                onPress={()=> 
+                  Keyboard.dismiss()}
                 accessible={false}>
                 <View style={styles.hintsContainer}>
-                  <HintInput  containerStyle={{marginBottom: 10}} value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
-                  <HintInput containerStyle={{marginBottom: 10}} value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
-                  <HintInput containerStyle={{marginBottom: 10}} value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
-                  <HintInput containerStyle={{marginBottom: 10}} value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
-                  <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
+                  <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
+                  <HintInput  value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
+                  <HintInput  value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
+                  <HintInput  value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
+                  <HintInput   value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
                 </View>
               </TouchableWithoutFeedback>
-
-              {!isKeyboardVisible &&
-                <>
-                  <Text style={styles.step2Text}>Gender Identity</Text>
+{ isKeyboardVisible ? null :
+  <>
+    <Text style={styles.step2Text}>Gender Identity</Text>
                   <SelectList
                     setSelected={(val) => setSelectedGender(val)}
                     data={genderData}
@@ -257,9 +248,11 @@ const UpdateScreen = ({ navigation }: any) => {
                     dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
                     dropdownTextStyles={styles.dropdownText}
                   />
-                </>
 
-              }
+  </>
+}
+                
+    
               <Text style={styles.step2Text}>Instagram Username</Text>
               <TouchableWithoutFeedback
                 onPress={Keyboard.dismiss}

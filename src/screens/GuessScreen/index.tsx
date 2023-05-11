@@ -17,6 +17,7 @@ const GuessScreen = ({ navigation, route }: any) => {
     const [newUsers, setNewUsers] = useState<Array<User>>();
     const [selectedUser, setSelectedUser] = useState<User>(undefined)
     const [scrollDown, setScrollDown] = useState<boolean>(false)
+    const [notEnoughUser, setNotEnoughUser] = useState<boolean>(false)
     const scrollViewRef: any = useRef();
 
     useEffect(() => {
@@ -32,34 +33,35 @@ const GuessScreen = ({ navigation, route }: any) => {
             setNewUsers(route.params.oldUsers)
             setChosenUser(route.params.chosenUser)
         }
-    }, []);
+    }, [user?.genderPreferences]);
 
     const fetchData = async () => {
         setLoading(true)
-        const documentSize = await (await firestore().collection('Users').get()).size
         let randomUsers: Array<User> = []
-
-        while (randomUsers.length < 5) {
-            try {
-                let randomIndex = generateRandomNumber(documentSize - 1, [user?.documentIndex, ...randomUsers.map(user => user?.documentIndex)])
-                let randomUser = await (((await firestore()
-                    .collection('Users')
-                    .where("documentIndex", "==", randomIndex)
-                    .get()).docs[0])).data()
-
-                if (!user?.genderPreferences.includes(randomUser.gender) && randomUser.gender !== "Prefer Not to Say") {
-                    continue;
+        await firestore()
+            .collection('Users')
+            .where("id", "!=", user?.id)
+            .where("gender", "in", ["Prefer Not to Say", ...user?.genderPreferences])
+            .get().then(async (usersArray) => {
+                if (usersArray.size < 6) {
+                    setNotEnoughUser(true)
+                } else {
+                    setNotEnoughUser(false)
+                    while (randomUsers.length < 5) {
+                        let randomIndex = generateRandomNumber(usersArray.size-1)
+                        let randomUser = usersArray.docs[randomIndex].data()
+                        usersArray.docs.splice(randomIndex, 1)
+                        try {
+                            await getBase64FromUrl(randomUser?.imageUrl).then((result) => {
+                                randomUser.imageUrl = result
+                            })
+                        } catch {
+                            randomUser.imageUrl = "https://static.thenounproject.com/png/630737-200.png"
+                        }
+                        randomUsers.push(randomUser)
+                    }
                 }
-
-                await getBase64FromUrl(randomUser?.imageUrl).then((result) => {
-                    randomUser.imageUrl = result
-                })
-
-                randomUsers.push(randomUser)
-            } catch {
-                continue;
-            }
-        }
+            })
         // displayed user index chosen.
         let randomIndex = Math.floor(Math.random() * 5)
         setChosenUser(randomUsers[randomIndex])
@@ -126,11 +128,18 @@ const GuessScreen = ({ navigation, route }: any) => {
     const FooterButton = () => {
         return (
             <View style={styles.buttonContainer}>
-                {
+                {notEnoughUser ?
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => navigation.push("ProfileUpdate")}>
+                        <Text style={styles.buttonText}>
+                            GO TO PREFERENCES
+                        </Text>
+                    </TouchableOpacity>
+                    :
                     selectedUser ?
                         <TouchableOpacity
                             style={styles.btn}
-                            disabled={!selectedUser}
                             onPress={onClickChoose}>
                             <Text style={styles.buttonText}>
                                 CHOOSE
@@ -163,30 +172,39 @@ const GuessScreen = ({ navigation, route }: any) => {
                     style={styles.linearGradient}>
                     <View style={styles.mainView}>
                         <ScrollView
+                            contentContainerStyle={{ flexGrow: 1 }}
                             ref={scrollViewRef}
                             showsVerticalScrollIndicator={false}>
-                            <ImageBackground
-                                source={require('../../assets/Notebook.png')}
-                                resizeMode="cover"
-                                style={styles.imageBackground}>
-                                {chosenUser?.hints.map((hint: string, index: number) => {
-                                    return (TextInside(hint, index + 1))
-                                })}
-                            </ImageBackground>
+                            {
+                                notEnoughUser ?
+                                    <View style={styles.enoughUserTextView}>
+                                        <Text style={styles.enoughUserText} >Apologies, there are not enough users matching your selected gender preference. Please consider expanding your gender preference.</Text>
+                                    </View> :
+                                    <>
+                                        <ImageBackground
+                                            source={require('../../assets/Notebook.png')}
+                                            resizeMode="cover"
+                                            style={styles.imageBackground}>
+                                            {chosenUser?.hints.map((hint: string, index: number) => {
+                                                return (TextInside(hint, index + 1))
+                                            })}
+                                        </ImageBackground>
 
-                            <Text style={styles.textBold}>
-                                Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
-                            </Text>
-                            <Text>Please select a person to continue.</Text>
+                                        <Text style={styles.textBold}>
+                                            Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
+                                        </Text>
+                                        <Text>Please select a person to continue.</Text>
 
-                            <FlatList
-                                keyExtractor={(item) => item?.id}
-                                style={{ marginVertical: 20 }}
-                                showsHorizontalScrollIndicator={false}
-                                horizontal={true}
-                                data={newUsers}
-                                renderItem={({ item }) => <Item item={item} />}
-                            />
+                                        <FlatList
+                                            keyExtractor={(item) => item?.id}
+                                            style={{ marginVertical: 20 }}
+                                            showsHorizontalScrollIndicator={false}
+                                            horizontal={true}
+                                            data={newUsers}
+                                            renderItem={({ item }) => <Item item={item} />}
+                                        />
+                                    </>
+                            }
                         </ScrollView>
                         <FooterButton />
                     </View>

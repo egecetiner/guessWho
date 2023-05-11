@@ -39,7 +39,9 @@ const ProfileScreen = ({ navigation }: any) => {
           colors={['rgba(255, 255, 255, 0.4)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
         <View style={styles.mainView}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView 
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}>
                 <View style={styles.imageContainer}>
                     <Image
                         style={user?.imageUrl ? styles.image : styles.emptyImage}
