@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: width,
-        marginBottom: 10
+        marginBottom: 40
     },
     footerContainer: {
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginTop: 30
+        marginTop: 50
     },
     indicatorContainer: {
         flexDirection: 'row',

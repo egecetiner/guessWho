@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
     width: width
   },
   btn: {
-    marginTop: 40,
-    marginBottom: 20,
+    marginVertical: 40,
     height: 50,
     borderRadius: 12,
     backgroundColor: '#CE6B35',

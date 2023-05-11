@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
         fontWeight: "normal"
     },
     imageBackground: {
+        flexGrow: 1,
+        flex: 1,
         paddingTop: 100,
         marginTop: 20,
         paddingBottom: 50,
@@ -62,7 +64,8 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonsContainer: {
-        marginVertical: 10,
+        marginTop: 30,
+        marginBottom: 10,
         flexDirection: "row"
     },
     buttonText: {

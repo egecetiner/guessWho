@@ -51,7 +51,7 @@ const ProfileScreen = ({ navigation }: any) => {
                 <Text style={styles.instaText}>{user?.instagram}</Text>
                 <ImageBackground
                     source={require('../../assets/Notebook.png')}
-                    resizeMode="contain"
+                    resizeMode="cover"
                     style={styles.imageBackground}
                 >
                     {user?.hints.map((hint: string, index: number) => {

@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 60,
         width: 150,
-        height: 150,
+        height: 150
     },
     imageContainer: {
         alignItems: "center",
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         width: 150,
         maxHeight: 150,
         borderRadius: 60,
+        marginBottom: 10
     },
     textInput: {
         borderWidth: 2,
