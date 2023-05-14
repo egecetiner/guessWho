@@ -18,7 +18,9 @@ export type User = {
     imageUrl: string,
     instagram: string,
     genderPreferences: Array<Gender>,
-    gender: Gender
+    gender: Gender,
+    attempts: number,
+    correctGuess: number
 } | FirebaseFirestoreTypes.DocumentData | undefined
 
 export type HintRouteParams = {

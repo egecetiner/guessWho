@@ -52,9 +52,9 @@ const styles = StyleSheet.create({
     imageBackground: {
         flexGrow: 1,
         flex: 1,
-        paddingTop: 100,
+        paddingTop: 60,
+        paddingBottom: 80,
         marginTop: 20,
-        paddingBottom: 50,
         opacity: 0.8,
         paddingHorizontal: "10%",
     },
@@ -86,6 +86,28 @@ const styles = StyleSheet.create({
         flex: 1,
         width: width
     },
+    contentHeadlines: {
+        fontWeight: "bold",
+        fontSize: 25
+    },
+    statistics: {
+        marginVertical: 10,
+        width: "70%",
+        alignSelf: "center",
+        justifyContent: "center"
+    },
+    statisticsView: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    statisticsText: {
+   
+        fontSize: 20
+    },
+    statisticsHead: {
+   
+        fontSize: 20
+    }
 })
 
 export default styles

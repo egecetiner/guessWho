@@ -11,7 +11,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 
 const GuessScreen = ({ navigation, route }: any) => {
-    const { user } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [chosenUser, setChosenUser] = useState<User>(undefined);
     const [newUsers, setNewUsers] = useState<Array<User>>();
@@ -48,7 +48,7 @@ const GuessScreen = ({ navigation, route }: any) => {
                 } else {
                     setNotEnoughUser(false)
                     while (randomUsers.length < 5) {
-                        let randomIndex = generateRandomNumber(usersArray.size-1)
+                        let randomIndex = generateRandomNumber(usersArray.size - 1)
                         let randomUser = usersArray.docs[randomIndex].data()
                         usersArray.docs.splice(randomIndex, 1)
                         try {
@@ -77,11 +77,46 @@ const GuessScreen = ({ navigation, route }: any) => {
         )
     }
 
-    const onClickChoose = () => {
+    const onClickChoose = async () => {
+        setLoading(true)
         if (selectedUser === chosenUser?.id) {
-            navigation.push('Congrats', { chosenUser: chosenUser })
+            await firestore().collection('Users').doc(user?.id).update({
+                attempts: user?.attempts + 1,
+                correctGuess: user?.correctGuess + 1
+            }).then(() => {
+                setUser({
+                    id: user?.id,
+                    imageUrl: user?.imageUrl,
+                    instagram: user?.instagram,
+                    hints: user?.hints,
+                    gender: user?.gender,
+                    genderPreferences: user?.genderPreferences,
+                    attempts: user?.attempts + 1,
+                    correctGuess: user?.correctGuess + 1
+                })
+            }).finally(() => {
+                setLoading(false)
+                navigation.push('Congrats', { chosenUser: chosenUser })
+            })
         } else {
-            navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
+            await firestore().collection('Users').doc(user?.id).update({
+                attempts: user?.attempts + 1,
+                correctGuess: user?.correctGuess
+            }).then(() => {
+                setUser({
+                    id: user?.id,
+                    imageUrl: user?.imageUrl,
+                    instagram: user?.instagram,
+                    hints: user?.hints,
+                    gender: user?.gender,
+                    genderPreferences: user?.genderPreferences,
+                    attempts: user?.attempts + 1,
+                    correctGuess: user?.correctGuess
+                })
+            }).finally(() => {
+                setLoading(false)
+                navigation.push("Wrong", { chosenUser: chosenUser, newUsers: newUsers })
+            })
         }
     }
 

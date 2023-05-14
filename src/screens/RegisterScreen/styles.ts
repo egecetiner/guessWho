@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     },
     step1Text: {
         fontSize: 20,
-        marginTop: 0
     },
     registerText: {
         fontSize: 30,

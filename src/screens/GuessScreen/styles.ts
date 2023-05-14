@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignSelf: "center",
         width: 150,
-        maxHeight: 150,
+        height: 150,
         marginRight: 20
     },
     btn: {
@@ -37,14 +37,14 @@ const styles = StyleSheet.create({
     },
     imageBackground: {
         marginTop: 20,
-        paddingTop: 130,
-        paddingBottom: 70,
         paddingHorizontal: "10%",
-        justifyContent: "space-evenly",
-        opacity: 0.8
+        justifyContent: "center",
+        opacity: 0.8,
+        flex: 1,
+        paddingTop: 40,
+        paddingBottom: 70
     },
     textBold: {
-        marginTop: 20,
         fontSize: 25,
         fontWeight: "bold"
     },

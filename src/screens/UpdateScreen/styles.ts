@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginTop: 30,
-        marginBottom: 10,
+        marginBottom: 20,
         flexDirection: "row"
     },
     text: {
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     },
     hintsContainer: {
         marginTop: 10,
-        paddingHorizontal: 20,
         flex: 1
     },
     btnText: {
@@ -117,9 +116,11 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     step2Text: {
+        fontWeight: "bold",
         fontSize: 20,
     },
     step1Text: {
+        fontWeight: "bold",
         fontSize: 20,
         marginBottom: 15
     },

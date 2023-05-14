@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, ImageBackground, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, ImageBackground, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { getUniqueId } from 'react-native-device-info';
 import storage from '@react-native-firebase/storage';
@@ -10,6 +10,7 @@ import Loading from '../../utils/Loading';
 import { UserContext } from '../../context/UserContext';
 import { HintRouteParams } from '../../utils/Types';
 import LinearGradient from 'react-native-linear-gradient';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const HintScreen = ({ navigation, route }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -19,30 +20,9 @@ const HintScreen = ({ navigation, route }: any) => {
   const [hint4, setHint4] = useState<string>("");
   const [hint5, setHint5] = useState<string>("");
   const [deviceId, setDeviceId] = useState<string>("")
-  const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
   const { setUser } = useContext(UserContext)
 
   const { instagram, imagePath, imageBase64, gender, genderPreferences }: HintRouteParams = route.params
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   useEffect(() => { getDeviceId() }, []);
 
@@ -70,7 +50,9 @@ const HintScreen = ({ navigation, route }: any) => {
           instagram: instagram,
           hints: [hint1, hint2, hint3, hint4, hint5],
           gender: gender,
-          genderPreferences: genderPreferences
+          genderPreferences: genderPreferences,
+          attempts: 0,
+          correctGuess: 0
         }
         await firestore().collection('Users').doc(deviceId).set(newUser).then(() => {
           newUser.imageUrl = imageBase64
@@ -105,32 +87,23 @@ const HintScreen = ({ navigation, route }: any) => {
           start={{ x: 0, y: 0.3 }} end={{ x: 0, y: 1 }}
           colors={['rgba(255, 255, 255, 0.6)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
-          <ScrollView contentContainerStyle={styles.contentContainer}>
-            <KeyboardAvoidingView
+            <KeyboardAwareScrollView
+            contentContainerStyle={styles.contentContainer}
+              extraScrollHeight={50}
               style={styles.mainView}
-              behavior={"padding"}
-              keyboardVerticalOffset={-10}>
+            >
+              <Text style={styles.hintHeadline}>HINTS</Text>
+              <Text style={styles.hintExplanation}>
+                Provide five hints about yourself that don't relate to your physical appearance for others to guess you.
+              </Text>
 
-              {!isKeyboardVisible &&
-                <>
-                  <Text style={styles.hintHeadline}>HINTS</Text>
-                  <Text style={styles.hintExplanation}>
-                    Provide five hints about yourself that don't relate to your physical appearance for others to guess you.
-                  </Text>
-                </>
-              }
-
-              <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
-                accessible={false}>
-                <View style={styles.hintsContainer}>
-                  <HintInput  value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
-                  <HintInput   value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
-                  <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
-                  <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
-                  <HintInput  value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
-                </View>
-              </TouchableWithoutFeedback>
+              <View style={styles.hintsContainer}>
+                <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
+                <HintInput value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
+                <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
+                <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
+                <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
+              </View>
 
               <TouchableOpacity
                 style={styles.btn}
@@ -144,8 +117,7 @@ const HintScreen = ({ navigation, route }: any) => {
                   COMPLETE PROFILE
                 </Text>
               </TouchableOpacity>
-            </KeyboardAvoidingView>
-          </ScrollView>
+            </KeyboardAwareScrollView>
         </LinearGradient>
       </ImageBackground>
     );

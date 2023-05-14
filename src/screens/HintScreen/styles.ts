@@ -17,16 +17,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between'
   },
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    alignSelf: "center",
-    width: 200,
-    maxHeight: 200,
-    borderRadius: 80,
-    marginTop: 40
-  },
   linearGradient: {
     height: '100%',
     width: '100%'
@@ -36,7 +26,8 @@ const styles = StyleSheet.create({
     width: width
   },
   btn: {
-    marginVertical: 40,
+    marginTop: 20,
+    marginBottom: 40,
     height: 50,
     borderRadius: 12,
     backgroundColor: '#CE6B35',
@@ -50,13 +41,10 @@ const styles = StyleSheet.create({
   },
   hintExplanation: {
     fontSize: 20,
-    marginTop: 20,
   },
   hintsContainer: {
-    marginTop: 50,
-    flex: 1,
-    paddingHorizontal: 20,
-
+    marginTop: 20,
+    flex: 1
   }
 })
 

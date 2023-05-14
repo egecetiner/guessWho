@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, ImageBackground, Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './styles';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { genderData, guessData } from './listDatas';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const RegisterScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState<string>("");
@@ -13,27 +14,6 @@ const RegisterScreen = ({ navigation }: any) => {
   const [selectedGender, setSelectedGender] = useState<string>("");
   const [selectedGuess, setSelectedGuess] = React.useState([]);
   const [imageBase64, setImageBase64] = useState<string | undefined | null>("");
-  const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   const choosePhotoFromLibrary = () => {
     ImagePicker.openPicker({
@@ -59,7 +39,7 @@ const RegisterScreen = ({ navigation }: any) => {
   };
 
   const buttonOnPress = () => {
-    
+
     if (!username || !imagePath || !selectedGender || !selectedGuess.length || !selectedGender || !selectedGuess.length) {
       Alert.alert(
         'Error',
@@ -89,55 +69,50 @@ const RegisterScreen = ({ navigation }: any) => {
         start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
         colors={['rgba(255, 255, 255, 0.3)', 'rgba(0, 0, 0, 1)']}
         style={styles.linearGradient}>
+          <KeyboardAwareScrollView
+           style={styles.mainView}
+             contentContainerStyle={styles.contentContainer}
+            extraScrollHeight={50}
+          >
+            <Text style={styles.registerText}>REGISTER</Text>
 
-        <ScrollView
-          contentContainerStyle={styles.contentContainer}
-          style={styles.mainView}>
-          <Text style={styles.registerText}>REGISTER</Text>
-
-          {!isKeyboardVisible &&
-            <>
-              <Text style={styles.step1Text}>Upload a photo of yourself </Text>
-              <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.imageContainer}>
-                <Image
-                  style={!!imagePath ? styles.image : styles.emptyImage}
-                  source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
-                />
-              </TouchableOpacity>
-
-              <Text style={styles.step2Text}>Gender Identity</Text>
-              <SelectList
-                setSelected={(val) => setSelectedGender(val)}
-                data={genderData}
-                save="value"
-                boxStyles={styles.dropdownBox}
-                inputStyles={styles.dropdownInput}
-                search={false}
-                arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-                dropdownStyles={styles.dropdown}
-                dropdownTextStyles={styles.dropdownText}
+            <Text style={styles.step1Text}>Upload a photo of yourself </Text>
+            <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.imageContainer}>
+              <Image
+                style={!!imagePath ? styles.image : styles.emptyImage}
+                source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
               />
+            </TouchableOpacity>
 
-              <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
-              <MultipleSelectList
-                setSelected={(val) => setSelectedGuess(val)}
-                data={guessData}
-                save="value"
-                label="Select the Gender You Prefer to Guess"
-                boxStyles={styles.dropdownBox}
-                inputStyles={styles.dropdownInput}
-                search={false}
-                arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-                dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
-                dropdownTextStyles={styles.dropdownText}
-              />
-            </>
-          }
+            <Text style={styles.step2Text}>Gender Identity</Text>
+            <SelectList
+              setSelected={(val) => setSelectedGender(val)}
+              data={genderData}
+              save="value"
+              boxStyles={styles.dropdownBox}
+              inputStyles={styles.dropdownInput}
+              search={false}
+              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+              dropdownStyles={styles.dropdown}
+              dropdownTextStyles={styles.dropdownText}
+            />
 
-          <Text style={styles.step2Text}>Instagram Username</Text>
-          <TouchableWithoutFeedback
-            onPress={Keyboard.dismiss}
-            accessible={false}>
+            <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
+            <MultipleSelectList
+              setSelected={(val) => setSelectedGuess(val)}
+              data={guessData}
+              save="value"
+              label="Select the Gender You Prefer to Guess"
+              boxStyles={styles.dropdownBox}
+              inputStyles={styles.dropdownInput}
+              search={false}
+              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+              dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
+              dropdownTextStyles={styles.dropdownText}
+            />
+
+            <Text style={styles.step2Text}>Instagram Username</Text>
+
             <View style={styles.textInputContainer}>
               <TextInput
                 value={username}
@@ -147,19 +122,18 @@ const RegisterScreen = ({ navigation }: any) => {
                 onChangeText={(text) => setUsername(text)}
               />
             </View>
-          </TouchableWithoutFeedback>
 
-          <TouchableOpacity
-            style={
-              styles.btn
-            }
-            onPress={buttonOnPress}>
-            <Text
-              style={styles.buttonText}>
-              NEXT STEP
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
+            <TouchableOpacity
+              style={
+                styles.btn
+              }
+              onPress={buttonOnPress}>
+              <Text
+                style={styles.buttonText}>
+                NEXT STEP
+              </Text>
+            </TouchableOpacity>
+          </KeyboardAwareScrollView>
       </LinearGradient>
     </ImageBackground>
   );

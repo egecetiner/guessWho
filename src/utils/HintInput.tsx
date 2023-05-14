@@ -12,8 +12,9 @@ interface Props {
 const HintInput: React.FC<Props> = ({ value, placeholder, onChangeText, number, containerStyle }) => {
     return (
         <View style={[styles.hintInputContainer, containerStyle]}>
-            <Text style={styles.number}>{number}. </Text>
+            <Text style={styles.number}>{number}.</Text>
             <TextInput
+                multiline
                 value={value}
                 style={styles.hintInputText}
                 placeholder={placeholder}
@@ -29,19 +30,26 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         flex: 1,
         flexDirection: "row",
-        justifyContent: 'space-between'
+        justifyContent: "space-between"
     },
     number: {
-        marginRight: 10,
         fontSize: 20,
-        height: 30,
         fontWeight: "bold",
+        alignSelf: "center"
     },
     hintInputText: {
+        maxWidth: "90%",
+        minHeight: 60,
+        maxHeight: 90,
+        flexGrow: 1,
         flex: 1,
-        height: 25,
         fontSize: 18,
-        borderBottomWidth: 2,
+        borderWidth: 2,
+        paddingHorizontal: 15,
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderRadius: 10,
+        justifyContent: "center"
     }
 })
 

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Keyboard, KeyboardAvoidingView, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Alert, Keyboard, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list';
 import { genderData, guessData } from '../RegisterScreen/listDatas';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const UpdateScreen = ({ navigation }: any) => {
   const { user, setUser } = useContext(UserContext)
@@ -23,29 +24,8 @@ const UpdateScreen = ({ navigation }: any) => {
   const [imagePath, setImagePath] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<string | undefined | null>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
   const [selectedGender, setSelectedGender] = useState<string>(user?.gender);
   const [selectedGuess, setSelectedGuess] = useState([]);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   const updateProfile = async () => {
     if (!hint1 || !hint2 || !hint3 || !hint4 || !hint5 || !username || !selectedGender || !selectedGuess.length) {
@@ -74,7 +54,9 @@ const UpdateScreen = ({ navigation }: any) => {
             instagram: username,
             hints: [hint1, hint2, hint3, hint4, hint5],
             gender: selectedGender,
-            genderPreferences: selectedGuess
+            genderPreferences: selectedGuess,
+            attempts: user?.attempts,
+            correctGuess: user?.correctGuess
           })
         }).finally(() => {
           setLoading(false)
@@ -183,115 +165,101 @@ const UpdateScreen = ({ navigation }: any) => {
           start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
           colors={['rgba(255, 255, 255, 0.5)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
-          <ScrollView
+          <KeyboardAwareScrollView
+            contentContainerStyle={styles.contentContainer}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.contentContainer}>
-            <KeyboardAvoidingView
-              style={styles.mainView}
-              behavior={"padding"}
-              keyboardVerticalOffset={-200}
-            >
-              {
-                isKeyboardVisible ? null :
-                <>
-                <Text style={styles.step1Text}>Profile Photo</Text>
-                  <TouchableOpacity
-                    onPress={choosePhotoFromLibrary}
-                    style={styles.imageContainer}>
-                    <Image
-                      style={styles.image}
-                      source={{ uri: imagePath !== "" ? imagePath : user?.imageUrl }} />
-                  </TouchableOpacity>
-                </>
-              }
-                  
-              <Text style={styles.step2Text}>Hints</Text>
-              <TouchableWithoutFeedback
-                onPress={()=> 
-                  Keyboard.dismiss()}
-                accessible={false}>
-                <View style={styles.hintsContainer}>
-                  <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
-                  <HintInput  value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
-                  <HintInput  value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
-                  <HintInput  value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
-                  <HintInput   value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
-                </View>
-              </TouchableWithoutFeedback>
-{ isKeyboardVisible ? null :
-  <>
-    <Text style={styles.step2Text}>Gender Identity</Text>
-                  <SelectList
-                    setSelected={(val) => setSelectedGender(val)}
-                    data={genderData}
-                    placeholder={selectedGender}
-                    save="value"
-                    boxStyles={styles.dropdownBox}
-                    inputStyles={styles.dropdownInput}
-                    search={false}
-                    arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-                    dropdownStyles={styles.dropdown}
-                    dropdownTextStyles={styles.dropdownText}
-                  />
+            extraScrollHeight={50}
+            style={styles.mainView}>
+            <Text style={styles.step1Text}>Profile Photo</Text>
+            <TouchableOpacity
+              onPress={choosePhotoFromLibrary}
+              style={styles.imageContainer}>
+              <Image
+                style={styles.image}
+                source={{ uri: imagePath !== "" ? imagePath : user?.imageUrl }} />
+            </TouchableOpacity>
 
-                  <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
-                  <MultipleSelectList
-                    placeholder={selectedGuess.toString()}
-                    setSelected={(val) => setSelectedGuess(val)}
-                    data={guessData}
-                    save="value"
-                    label="Select the Gender You Prefer to Guess"
-                    boxStyles={styles.dropdownBox}
-                    inputStyles={styles.dropdownInput}
-                    search={false}
-                    arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-                    dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
-                    dropdownTextStyles={styles.dropdownText}
-                  />
 
-  </>
-}
-                
-    
-              <Text style={styles.step2Text}>Instagram Username</Text>
-              <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
-                accessible={false}>
-                <View style={styles.textInputContainer}>
-                  <TextInput
-                    value={username}
-                    style={styles.textInput}
-                    placeholder='@egectnr'
-                    placeholderTextColor={"#474747"}
-                    onChangeText={(text) => setUsername(text)}
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-
-              <View style={styles.buttonsContainer}>
-                <TouchableOpacity
-                  style={
-                    styles.btn
-                  }
-                  onPress={updateProfile}>
-                  <Text
-                    style={styles.btnText}>
-                    EDIT PROFILE
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={
-                    [styles.btn, { marginLeft: 10, backgroundColor: "#C41E3A" }]
-                  }
-                  onPress={onPressDelete}>
-                  <Text
-                    style={styles.btnText}>
-                    DELETE PROFILE
-                  </Text>
-                </TouchableOpacity>
+            <Text style={styles.step2Text}>Hints</Text>
+            <TouchableWithoutFeedback
+              onPress={() => Keyboard.dismiss()}
+              accessible={false}>
+              <View style={styles.hintsContainer}>
+                <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
+                <HintInput value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
+                <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
+                <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
+                <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
               </View>
-            </KeyboardAvoidingView>
-          </ScrollView>
+            </TouchableWithoutFeedback>
+
+            <Text style={styles.step2Text}>Gender Identity</Text>
+            <SelectList
+              setSelected={(val) => setSelectedGender(val)}
+              data={genderData}
+              placeholder={selectedGender}
+              save="value"
+              boxStyles={styles.dropdownBox}
+              inputStyles={styles.dropdownInput}
+              search={false}
+              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+              dropdownStyles={styles.dropdown}
+              dropdownTextStyles={styles.dropdownText}
+            />
+
+            <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
+            <MultipleSelectList
+              placeholder={selectedGuess.toString()}
+              setSelected={(val) => setSelectedGuess(val)}
+              data={guessData}
+              save="value"
+              label="Select the Gender You Prefer to Guess"
+              boxStyles={styles.dropdownBox}
+              inputStyles={styles.dropdownInput}
+              search={false}
+              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+              dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
+              dropdownTextStyles={styles.dropdownText}
+            />
+
+            <Text style={styles.step2Text}>Instagram Username</Text>
+            <TouchableWithoutFeedback
+              onPress={Keyboard.dismiss}
+              accessible={false}>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  value={username}
+                  style={styles.textInput}
+                  placeholder='@egectnr'
+                  placeholderTextColor={"#474747"}
+                  onChangeText={(text) => setUsername(text)}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={
+                  styles.btn
+                }
+                onPress={updateProfile}>
+                <Text
+                  style={styles.btnText}>
+                  EDIT PROFILE
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={
+                  [styles.btn, { marginLeft: 10, backgroundColor: "#C41E3A" }]
+                }
+                onPress={onPressDelete}>
+                <Text
+                  style={styles.btnText}>
+                  DELETE PROFILE
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAwareScrollView>
         </LinearGradient>
       </ImageBackground>
     )
