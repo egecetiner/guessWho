@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     textInput: {
-        backgroundColor: "#C0BBB5",
         borderWidth: 2,
         borderRadius: 10,
         height: 50,
@@ -86,7 +85,6 @@ const styles = StyleSheet.create({
     dropdownBox: {
         borderColor: "black",
         borderWidth: 2,
-        backgroundColor: "#C0BBB5",
         marginBottom: 0
     },
     dropdownInput: {

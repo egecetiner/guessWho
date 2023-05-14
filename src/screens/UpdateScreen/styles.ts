@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 20,
         textAlign: "center",
-        backgroundColor: "#C0BBB5",
+ 
     },
     btn: {
         flex: 1,
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     dropdownBox: {
         borderColor: "black",
         borderWidth: 2,
-        backgroundColor: "#C0BBB5",
         marginBottom: 10
     },
     dropdownInput: {

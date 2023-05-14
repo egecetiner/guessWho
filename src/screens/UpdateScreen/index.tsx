@@ -162,7 +162,7 @@ const UpdateScreen = ({ navigation }: any) => {
         style={styles.backgroundImage}
       >
         <LinearGradient
-          start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
+          start={{ x: 0, y: 0.6 }} end={{ x: 0, y: 1 }}
           colors={['rgba(255, 255, 255, 0.5)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
           <KeyboardAwareScrollView
