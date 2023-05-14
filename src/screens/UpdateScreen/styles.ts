@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     mainView: {
@@ -87,17 +87,18 @@ const styles = StyleSheet.create({
     linearGradient: {
         height: '100%',
         width: '100%'
-      },
-      backgroundImage: {
+    },
+    backgroundImage: {
         flex: 1,
-        width: width
-      },
-      contentContainer: { 
-        flexGrow: 1, 
-        flexDirection: 'column', 
+        width: width,
+        height: height,
+    },
+    contentContainer: {
+        flexGrow: 1,
+        flexDirection: 'column',
         justifyContent: 'space-between'
-      },
-      dropdownBox: {
+    },
+    dropdownBox: {
         borderColor: "black",
         borderWidth: 2,
         backgroundColor: "#C0BBB5",

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Keyboard, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground } from 'react-native';
+import { Alert, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -179,19 +179,14 @@ const UpdateScreen = ({ navigation }: any) => {
                 source={{ uri: imagePath !== "" ? imagePath : user?.imageUrl }} />
             </TouchableOpacity>
 
-
             <Text style={styles.step2Text}>Hints</Text>
-            <TouchableWithoutFeedback
-              onPress={() => Keyboard.dismiss()}
-              accessible={false}>
-              <View style={styles.hintsContainer}>
-                <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
-                <HintInput value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
-                <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
-                <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
-                <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
-              </View>
-            </TouchableWithoutFeedback>
+            <View style={styles.hintsContainer}>
+              <HintInput value={hint1} placeholder="I love techno!" number={1} onChangeText={setHint1} />
+              <HintInput value={hint2} placeholder="I am a software developer" number={2} onChangeText={setHint2} />
+              <HintInput value={hint3} placeholder="My biggest talent is..." number={3} onChangeText={setHint3} />
+              <HintInput value={hint4} placeholder="I make jokes when I am uncomfortable" number={4} onChangeText={setHint4} />
+              <HintInput value={hint5} placeholder="I can't drive car!" number={5} onChangeText={setHint5} />
+            </View>
 
             <Text style={styles.step2Text}>Gender Identity</Text>
             <SelectList
@@ -223,19 +218,15 @@ const UpdateScreen = ({ navigation }: any) => {
             />
 
             <Text style={styles.step2Text}>Instagram Username</Text>
-            <TouchableWithoutFeedback
-              onPress={Keyboard.dismiss}
-              accessible={false}>
-              <View style={styles.textInputContainer}>
-                <TextInput
-                  value={username}
-                  style={styles.textInput}
-                  placeholder='@egectnr'
-                  placeholderTextColor={"#474747"}
-                  onChangeText={(text) => setUsername(text)}
-                />
-              </View>
-            </TouchableWithoutFeedback>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                value={username}
+                style={styles.textInput}
+                placeholder='@egectnr'
+                placeholderTextColor={"#474747"}
+                onChangeText={(text) => setUsername(text)}
+              />
+            </View>
 
             <View style={styles.buttonsContainer}>
               <TouchableOpacity
