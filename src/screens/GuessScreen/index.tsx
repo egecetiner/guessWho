@@ -5,13 +5,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { User } from '../../utils/Types';
 import styles from './styles';
 import Loading from '../../utils/Loading';
-import { UserContext } from '../../context/UserContext';
 import { getBase64FromUrl, generateRandomNumber } from '../../utils/UsefulFunctions'
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
+import { AppContext } from '../../context/AppContext';
 
 const GuessScreen = ({ navigation, route }: any) => {
-    const { user, setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(AppContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [chosenUser, setChosenUser] = useState<User>(undefined);
     const [newUsers, setNewUsers] = useState<Array<User>>();
@@ -40,6 +40,7 @@ const GuessScreen = ({ navigation, route }: any) => {
         let randomUsers: Array<User> = []
         await firestore()
             .collection('Users')
+            .where("registeredUser", "==", true)
             .where("id", "!=", user?.id)
             .where("gender", "in", ["Prefer Not to Say", ...user?.genderPreferences])
             .get().then(async (usersArray) => {
@@ -85,6 +86,7 @@ const GuessScreen = ({ navigation, route }: any) => {
                 correctGuess: user?.correctGuess + 1
             }).then(() => {
                 setUser({
+                    registeredUser: user?.registeredUser,
                     id: user?.id,
                     imageUrl: user?.imageUrl,
                     instagram: user?.instagram,
@@ -104,6 +106,7 @@ const GuessScreen = ({ navigation, route }: any) => {
                 correctGuess: user?.correctGuess
             }).then(() => {
                 setUser({
+                    registeredUser: user?.registeredUser,
                     id: user?.id,
                     imageUrl: user?.imageUrl,
                     instagram: user?.instagram,

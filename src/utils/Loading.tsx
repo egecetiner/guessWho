@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext } from "react"
 import { ActivityIndicator, View, StyleSheet, ColorSchemeName, Appearance } from "react-native"
+import { AppContext } from "../context/AppContext"
 
 const Loading = () => {
-    const [colorScheme, setColorScheme] = useState<ColorSchemeName>(undefined)
-
-    useEffect(() => {
-        setColorScheme(Appearance.getColorScheme())
-    }, []);
+    const { colorScheme } = useContext(AppContext)
 
     return (
         <View style={styles.loadingContainer}>

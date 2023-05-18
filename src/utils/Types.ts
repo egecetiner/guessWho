@@ -13,7 +13,8 @@ export type SlideProps = {
 export type Gender = "Male" | "Female" | "Non-Binary/Other" | "Prefer Not to Say"
 
 export type User = {
-    hints: Array<string>,
+    registeredUser: boolean,
+    hints: Array<string> | [],
     id: string,
     imageUrl: string,
     instagram: string,
@@ -30,3 +31,5 @@ export type HintRouteParams = {
     gender: Gender,
     genderPreferences: Array<Gender>
 }
+
+export type colorScheme = string | null | undefined

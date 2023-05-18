@@ -7,38 +7,42 @@ import IntroScreen from '../screens/IntroScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import CustomHeader from '../utils/CustomHeader';
-import { Appearance, ColorSchemeName } from 'react-native';
-import { UserContext } from '../context/UserContext';
+import { Alert, Appearance } from 'react-native';
 import { getUniqueId } from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
 import { getBase64FromUrl } from '../utils/UsefulFunctions';
 import Loading from '../utils/Loading';
+import SkipHeaderRight from '../utils/SkipHeaderRight';
+import Config from 'react-native-config';
+import { AppContext } from '../context/AppContext';
 
 const Stack = createStackNavigator();
 
+const BlackTheme = {
+  dark: true,
+  colors: {
+    primary: 'black',
+    background: 'black',
+    card: 'black',
+    text: 'black',
+    border: 'black',
+    notification: 'black',
+  },
+};
+
 const Router = () => {
-  const [colorScheme, setColorScheme] = useState<ColorSchemeName>(undefined)
   const [loading, setLoading] = useState<boolean>(false)
-  const { user, setUser } = useContext(UserContext)
+  const { user, setUser, colorScheme, setColorScheme } = useContext(AppContext)
 
   useEffect(() => {
     setColorScheme(Appearance.getColorScheme())
+  }, []);
+
+  useEffect(() => {
     if (!user) {
       fetchData()
     }
   }, []);
-
-  const BlackTheme = {
-    dark: true,
-    colors: {
-      primary: 'black',
-      background: 'black',
-      card: 'black',
-      text: 'black',
-      border: 'black',
-      notification: 'black',
-    },
-  };
 
   const fetchData = async () => {
     setLoading(true)
@@ -46,16 +50,10 @@ const Router = () => {
       await firestore().collection('Users').doc(item).get().then(async (data) => {
         let newUser = data.data()
         if (newUser) {
-          try {
-            await getBase64FromUrl(newUser?.imageUrl).then((result: any) => {
-              newUser!.imageUrl = result
-              setUser(newUser)
-            })
-          }
-          catch {
-            newUser!.imageUrl = ""
+          await getBase64FromUrl(newUser?.imageUrl).then((result: any) => {
+            newUser!.imageUrl = result
             setUser(newUser)
-          }
+          })
         }
       })
     }).finally(() => {
@@ -63,6 +61,52 @@ const Router = () => {
     })
   }
 
+  const createAnonymousProfile = async (navigation) => {
+    setLoading(true)
+    const firebaseUrl = Config.FIREBASE_URL
+    try {
+      await getUniqueId().then(async (item) => {
+        let newUser = {
+          registeredUser: false,
+          id: item,
+          imageUrl: `${firebaseUrl}/o/${item}?alt=media`,
+          instagram: "-",
+          hints: [],
+          gender: "Prefer Not to Say",
+          genderPreferences: ["Male", "Female", "Non-Binary/Other"],
+          attempts: 0,
+          correctGuess: 0
+        }
+        await firestore().collection('Users').doc(item).set(newUser).then(() => {
+          setUser(newUser)
+          setLoading(false)
+        })
+      })
+      navigation.push('TabNav')
+    } catch (e) {
+      setLoading(false)
+      Alert.alert(
+        'Error',
+        "We regret to inform you that the profile creation process has failed.",
+        [
+          { text: 'OK', onPress: () => console.log("Failed") },
+        ]
+      );
+    }
+
+  }
+
+  const onClickHeaderRight = (navigation) => {
+    Alert.alert('Confirmation', "Please confirm that you wish to proceed without registering. By skipping registration, you will not be able to set a gender preference for the profiles you'll see, and others will not be able to guess your profile. We highly recommend registering for a better user experience. Are you sure you want to continue without registration?", [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+      },
+      {
+        text: 'Confirm', onPress: () => { createAnonymousProfile(navigation) }
+      },
+    ])
+  }
 
   if (loading) {
     return (
@@ -74,7 +118,7 @@ const Router = () => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            headerTintColor: colorScheme === "dark" ? "white" : "black"
+            headerTintColor: colorScheme === "dark" ? "white" : "black",
           }}
         >
           {
@@ -91,10 +135,13 @@ const Router = () => {
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
-            options={{
+            options={({ navigation }) => ({
               headerShown: true,
               headerTitle: () => <CustomHeader />,
-            }} />
+              headerRight: () => <SkipHeaderRight onClickHeaderRight={() => onClickHeaderRight(navigation)} />,
+              headerRightContainerStyle: { justifyContent: "center", flex: 1 },
+            })}
+          />
           <Stack.Screen
             name="Hints"
             component={HintScreen}

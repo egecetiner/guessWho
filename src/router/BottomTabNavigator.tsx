@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from "../screens/ProfileScreen";
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,18 +9,13 @@ import CustomHeader from '../utils/CustomHeader';
 import GuessScreen from '../screens/GuessScreen';
 import CongratsScreen from '../screens/CongratsScreen';
 import WrongScreen from '../screens/WrongScreen';
-import { Appearance, ColorSchemeName } from 'react-native';
+import { AppContext } from '../context/AppContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const ProfileStack = () => {
-    const [colorScheme, setColorScheme] = useState<ColorSchemeName>(undefined)
-
-    useEffect(() => {
-        setColorScheme(Appearance.getColorScheme())
-    }, []);
-
+    const { colorScheme } = useContext(AppContext)
     return (
         <Stack.Navigator
             screenOptions={{
@@ -57,7 +52,7 @@ const GuessStack = () => {
                 name="Wrong"
                 component={WrongScreen}
             />
-               <Stack.Screen
+            <Stack.Screen
                 name="ProfileUpdate"
                 component={UpdateScreen}
             />
@@ -90,7 +85,6 @@ const BottomTabNavigator = () => {
                         <FontAwesome5 name='mask' color={color} size={25} />
                     ),
                     headerShown: true, headerTitle: () => <CustomHeader />,
-
                 }} />
         </Tab.Navigator>
     )

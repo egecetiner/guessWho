@@ -1,15 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import Router from './src/router';
-import { UserContextProvider } from './src/context/UserContext';
+import { AppContextProvider } from './src/context/AppContext';
 
 const App = () => {
   return (
-    <UserContextProvider>
+    <AppContextProvider>
       <View style={{ flex: 1 }}>
         <Router />
       </View>
-    </UserContextProvider>
+    </AppContextProvider>
   );
 }
 

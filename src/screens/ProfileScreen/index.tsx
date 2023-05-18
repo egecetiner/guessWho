@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import { ImageBackground, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import styles from './styles';
-import { UserContext } from '../../context/UserContext';
 import LinearGradient from 'react-native-linear-gradient';
+import { AppContext } from '../../context/AppContext';
 
 const ProfileScreen = ({ navigation }: any) => {
-    const { user } = useContext(UserContext)
+    const { user } = useContext(AppContext)
 
     useEffect(() =>
         navigation.addListener('beforeRemove', (e: any) => {
@@ -44,8 +44,8 @@ const ProfileScreen = ({ navigation }: any) => {
                         showsVerticalScrollIndicator={false}>
                         <View style={styles.imageContainer}>
                             <Image
-                                style={user?.imageUrl ? styles.image : styles.emptyImage}
-                                source={user?.imageUrl ? { uri: user?.imageUrl } : require("../../assets/User.png")}
+                                style={user?.registeredUser ? styles.image : styles.emptyImage}
+                                source={user?.registeredUser ? { uri: user?.imageUrl } : require("../../assets/User.png")}
                             />
                         </View>
                         <Text style={styles.instaText}>{user?.instagram}</Text>
@@ -54,28 +54,37 @@ const ProfileScreen = ({ navigation }: any) => {
                             resizeMode="cover"
                             style={styles.imageBackground}
                         >
-                            <Text style={styles.contentHeadlines}>Statistics</Text>
-                            <View style={styles.statistics}>
-                                <View style={styles.statisticsView}>
-                                    <Text style={styles.statisticsHead}>Guess Attempts:</Text>
-                                    <Text style={styles.statisticsText}> {user?.attempts}</Text>
-                                </View>
+                            {
+                                user?.registeredUser ? <>
+                                    <Text style={styles.contentHeadlines}>Statistics</Text>
+                                    <View style={styles.statistics}>
+                                        <View style={styles.statisticsView}>
+                                            <Text style={styles.statisticsHead}>Guess Attempts:</Text>
+                                            <Text style={styles.statisticsText}> {user?.attempts}</Text>
+                                        </View>
 
-                                <View style={styles.statisticsView}>
-                                    <Text style={styles.statisticsHead}>Correct Guesses:</Text>
-                                    <Text style={styles.statisticsText}> {user?.correctGuess}</Text>
-                                </View>
+                                        <View style={styles.statisticsView}>
+                                            <Text style={styles.statisticsHead}>Correct Guesses:</Text>
+                                            <Text style={styles.statisticsText}> {user?.correctGuess}</Text>
+                                        </View>
 
-                                <View style={styles.statisticsView}>
-                                    <Text style={styles.statisticsHead}>Accuracy Rate:</Text>
-                                    <Text style={styles.statisticsText}>{!user?.attempts ? 0 : ((user?.correctGuess / user?.attempts) * 100).toFixed(0)}%</Text>
-                                </View>
-                            </View>
-                            <Text style={styles.contentHeadlines}>Hints</Text>
+                                        <View style={styles.statisticsView}>
+                                            <Text style={styles.statisticsHead}>Accuracy Rate:</Text>
+                                            <Text style={styles.statisticsText}>{!user?.attempts ? 0 : ((user?.correctGuess / user?.attempts) * 100).toFixed(0)}%</Text>
+                                        </View>
+                                    </View>
+                                    <Text style={styles.contentHeadlines}>Hints</Text>
 
-                            {user?.hints.map((hint: string, index: number) => {
-                                return (TextInside(hint, index + 1))
-                            })}
+                                    {user?.hints.map((hint: string, index: number) => {
+                                        return (TextInside(hint, index + 1))
+                                    })}
+                                </> :
+                                    <>
+                                        <Text style={styles.contentHeadlines}>To enhance your user experience, please <Text style={{ color: "#CE6B35" }}>edit profile</Text> and provide your informations.</Text>
+                                        <Text style={[styles.contentHeadlines, { marginTop: 20 }]}>It will allow you to set a gender preference for the profiles you will guess and to join the game as a profile to be guessed.</Text>
+                                    </>
+
+                            }
                         </ImageBackground>
                     </ScrollView>
 

@@ -1,26 +1,26 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Image, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, ImageBackground } from 'react-native';
+import { Alert, Image, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import styles from './styles';
 import HintInput from '../../utils/HintInput';
-import { UserContext } from '../../context/UserContext';
 import Loading from '../../utils/Loading';
 import LinearGradient from 'react-native-linear-gradient';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list';
 import { genderData, guessData } from '../RegisterScreen/listDatas';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { AppContext } from '../../context/AppContext';
 
 const UpdateScreen = ({ navigation }: any) => {
-  const { user, setUser } = useContext(UserContext)
+  const { user, setUser } = useContext(AppContext)
   const [username, setUsername] = useState(user?.instagram);
-  const [hint1, setHint1] = useState(user?.hints[0]);
-  const [hint2, setHint2] = useState(user?.hints[1]);
-  const [hint3, setHint3] = useState(user?.hints[2]);
-  const [hint4, setHint4] = useState(user?.hints[3]);
-  const [hint5, setHint5] = useState(user?.hints[4]);
+  const [hint1, setHint1] = useState(user?.hints && user?.hints[0]);
+  const [hint2, setHint2] = useState(user?.hints && user?.hints[1]);
+  const [hint3, setHint3] = useState(user?.hints && user?.hints[2]);
+  const [hint4, setHint4] = useState(user?.hints && user?.hints[3]);
+  const [hint5, setHint5] = useState(user?.hints && user?.hints[4]);
   const [imagePath, setImagePath] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<string | undefined | null>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,12 +43,14 @@ const UpdateScreen = ({ navigation }: any) => {
           await storage().ref(user?.id).putFile(imagePath);
         }
         await firestore().collection('Users').doc(user?.id).update({
+          registeredUser: true,
           instagram: username,
           hints: [hint1, hint2, hint3, hint4, hint5],
           gender: selectedGender,
           genderPreferences: selectedGuess
         }).then(() => {
           setUser({
+            registeredUser: true,
             id: user?.id,
             imageUrl: imageBase64 !== "" ? imageBase64 : user?.imageUrl,
             instagram: username,
@@ -124,7 +126,9 @@ const UpdateScreen = ({ navigation }: any) => {
   const deleteProfile = async () => {
     setLoading(true)
     try {
-      await storage().ref(user?.id).delete();
+      if(user?.registeredUser) {
+        await storage().ref(user?.id).delete();
+      }
       await firestore().collection('Users').doc(user?.id).delete()
         .then(() => {
           setUser(undefined)

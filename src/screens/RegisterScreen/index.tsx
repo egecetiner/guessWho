@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './styles';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
@@ -39,7 +39,6 @@ const RegisterScreen = ({ navigation }: any) => {
   };
 
   const buttonOnPress = () => {
-
     if (!username || !imagePath || !selectedGender || !selectedGuess.length || !selectedGender || !selectedGuess.length) {
       Alert.alert(
         'Error',
@@ -69,71 +68,70 @@ const RegisterScreen = ({ navigation }: any) => {
         start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
         colors={['rgba(255, 255, 255, 0.3)', 'rgba(0, 0, 0, 1)']}
         style={styles.linearGradient}>
-          <KeyboardAwareScrollView
-           style={styles.mainView}
-             contentContainerStyle={styles.contentContainer}
-            extraScrollHeight={50}
-          >
-            <Text style={styles.registerText}>REGISTER</Text>
+        <KeyboardAwareScrollView
+          style={styles.mainView}
+          contentContainerStyle={styles.contentContainer}
+          extraScrollHeight={50}
+        >
+          <Text style={styles.registerText}>REGISTER</Text>
 
-            <Text style={styles.step1Text}>Upload a photo of yourself </Text>
-            <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.imageContainer}>
-              <Image
-                style={!!imagePath ? styles.image : styles.emptyImage}
-                source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
-              />
-            </TouchableOpacity>
-
-            <Text style={styles.step2Text}>Gender Identity</Text>
-            <SelectList
-              setSelected={(val) => setSelectedGender(val)}
-              data={genderData}
-              save="value"
-              boxStyles={styles.dropdownBox}
-              inputStyles={styles.dropdownInput}
-              search={false}
-              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-              dropdownStyles={styles.dropdown}
-              dropdownTextStyles={styles.dropdownText}
+          <Text style={styles.step1Text}>Upload a photo of yourself</Text>
+          <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.imageContainer}>
+            <Image
+              style={!!imagePath ? styles.image : styles.emptyImage}
+              source={!!imagePath ? { uri: imagePath } : require('../../assets/addUser.png')}
             />
+          </TouchableOpacity>
 
-            <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
-            <MultipleSelectList
-              setSelected={(val) => setSelectedGuess(val)}
-              data={guessData}
-              save="value"
-              label="Select the Gender You Prefer to Guess"
-              boxStyles={styles.dropdownBox}
-              inputStyles={styles.dropdownInput}
-              search={false}
-              arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
-              dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
-              dropdownTextStyles={styles.dropdownText}
+          <Text style={styles.step2Text}>Gender Identity</Text>
+          <SelectList
+            setSelected={(val) => setSelectedGender(val)}
+            data={genderData}
+            save="value"
+            boxStyles={styles.dropdownBox}
+            inputStyles={styles.dropdownInput}
+            search={false}
+            arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+            dropdownStyles={styles.dropdown}
+            dropdownTextStyles={styles.dropdownText}
+          />
+
+          <Text style={styles.step2Text}>Preferred Gender to Guess</Text>
+          <MultipleSelectList
+            setSelected={(val) => setSelectedGuess(val)}
+            data={guessData}
+            save="value"
+            label="Select the Gender You Prefer to Guess"
+            boxStyles={styles.dropdownBox}
+            inputStyles={styles.dropdownInput}
+            search={false}
+            arrowicon={<Entypo color="black" name='chevron-down' size={25} />}
+            dropdownStyles={{ borderColor: "black", borderWidth: 2, backgroundColor: "#C0BBB5", marginTop: 10 }}
+            dropdownTextStyles={styles.dropdownText}
+          />
+
+          <Text style={styles.step2Text}>Instagram Username</Text>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              value={username}
+              style={styles.textInput}
+              placeholder='@egectnr'
+              placeholderTextColor={"#474747"}
+              onChangeText={(text) => setUsername(text)}
             />
+          </View>
 
-            <Text style={styles.step2Text}>Instagram Username</Text>
-
-            <View style={styles.textInputContainer}>
-              <TextInput
-                value={username}
-                style={styles.textInput}
-                placeholder='@egectnr'
-                placeholderTextColor={"#474747"}
-                onChangeText={(text) => setUsername(text)}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={
-                styles.btn
-              }
-              onPress={buttonOnPress}>
-              <Text
-                style={styles.buttonText}>
-                NEXT STEP
-              </Text>
-            </TouchableOpacity>
-          </KeyboardAwareScrollView>
+          <TouchableOpacity
+            style={
+              styles.btn
+            }
+            onPress={buttonOnPress}>
+            <Text
+              style={styles.buttonText}>
+              NEXT STEP
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </LinearGradient>
     </ImageBackground>
   );

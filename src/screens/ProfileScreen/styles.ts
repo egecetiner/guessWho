@@ -72,9 +72,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         color: "white",
+        padding: 10
     },
     emptyImage: {
-        width: 80,
+        borderWidth: 2,
+        borderRadius: 60,
+        opacity: 0.8,
+        backgroundColor: "white",
+        width: 150,
         height: 150,
         resizeMode: 'contain'
     },
