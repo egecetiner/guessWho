@@ -179,8 +179,8 @@ const UpdateScreen = ({ navigation }: any) => {
               onPress={choosePhotoFromLibrary}
               style={styles.imageContainer}>
               <Image
-                style={styles.image}
-                source={{ uri: imagePath !== "" ? imagePath : user?.imageUrl }} />
+                style={user?.registeredUser ? styles.image : imagePath !== "" ? styles.image : styles.emptyImage}
+                source={user?.registeredUser ? { uri: imagePath !== "" ? imagePath : user?.imageUrl } : imagePath !== "" ? { uri: imagePath } : require("../../assets/addUser.png")} />
             </TouchableOpacity>
 
             <Text style={styles.step2Text}>Hints</Text>

@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
       },
     image: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 60,
         width: 150,
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
         width: width
     },
     imageContainer: {
+        borderColor: "black",
         backgroundColor: "#C0BBB5",
         alignItems: "center",
         justifyContent: "center",
@@ -39,6 +41,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     textInput: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 10,
         height: 50,

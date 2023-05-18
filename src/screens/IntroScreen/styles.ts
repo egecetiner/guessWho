@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     slideContainer: {
+        paddingRight: 20,
         position: "absolute",
         bottom: 0,
         width: width,

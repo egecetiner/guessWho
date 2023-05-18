@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     image: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 30,
         width: 150,

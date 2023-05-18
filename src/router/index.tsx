@@ -50,10 +50,14 @@ const Router = () => {
       await firestore().collection('Users').doc(item).get().then(async (data) => {
         let newUser = data.data()
         if (newUser) {
-          await getBase64FromUrl(newUser?.imageUrl).then((result: any) => {
-            newUser!.imageUrl = result
+          if(newUser.registeredUser) {
+            await getBase64FromUrl(newUser?.imageUrl).then((result: any) => {
+              newUser!.imageUrl = result
+              setUser(newUser)
+            })
+          } else {
             setUser(newUser)
-          })
+          }
         }
       })
     }).finally(() => {
@@ -117,6 +121,7 @@ const Router = () => {
       <NavigationContainer theme={colorScheme === "dark" ? BlackTheme : DefaultTheme}>
         <Stack.Navigator
           screenOptions={{
+            headerTitleAlign: 'center',
             headerShown: false,
             headerTintColor: colorScheme === "dark" ? "white" : "black",
           }}
@@ -138,6 +143,7 @@ const Router = () => {
             options={({ navigation }) => ({
               headerShown: true,
               headerTitle: () => <CustomHeader />,
+              headerTitleAlign: 'center',
               headerRight: () => <SkipHeaderRight onClickHeaderRight={() => onClickHeaderRight(navigation)} />,
               headerRightContainerStyle: { justifyContent: "center", flex: 1 },
             })}

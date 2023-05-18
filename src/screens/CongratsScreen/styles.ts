@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
         borderTopColor: "white"
     },
     image: {
+        borderColor: "green",
         borderWidth: 2,
         borderRadius: 60,
         width: 150,

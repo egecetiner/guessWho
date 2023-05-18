@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 2
     },
     image: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 60,
         width: 150,
@@ -22,8 +23,10 @@ const styles = StyleSheet.create({
         maxHeight: 150,
         borderWidth: 2,
         borderRadius: 60,
+        borderColor: "black",
     },
     textInput: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 10,
         height: 50,
@@ -78,6 +81,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 60,
         opacity: 0.8,
+        borderColor: "black",
         backgroundColor: "white",
         width: 150,
         height: 150,

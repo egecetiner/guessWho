@@ -8,29 +8,32 @@ const styles = StyleSheet.create({
         borderTopWidth: 2
     },
     image: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 60,
         width: 150,
         height: 150
     },
     imageContainer: {
+        borderColor: "black",
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 2,
         alignSelf: "center",
         width: 150,
-        maxHeight: 150,
+        height: 150,
         borderRadius: 60,
-        marginBottom: 10
+        marginBottom: 10,
+        backgroundColor: "white",
     },
     textInput: {
+        borderColor: "black",
         borderWidth: 2,
         borderRadius: 10,
         height: 50,
         padding: 10,
         fontSize: 20,
         textAlign: "center",
- 
     },
     btn: {
         flex: 1,
@@ -106,6 +109,10 @@ const styles = StyleSheet.create({
     dropdownInput: {
         fontSize: 20,
         color: "black"
+    },
+    emptyImage: {
+        width: 80,
+        height: 80,
     },
     dropdown: {
         borderColor: "black",

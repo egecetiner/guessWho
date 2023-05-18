@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ImageBackground, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './styles';
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
@@ -65,7 +65,7 @@ const RegisterScreen = ({ navigation }: any) => {
       style={styles.backgroundImage}
     >
       <LinearGradient
-        start={{ x: 0, y: 0.5 }} end={{ x: 0, y: 1 }}
+        start={{ x: 0, y: 0.6 }} end={{ x: 0, y: 1 }}
         colors={['rgba(255, 255, 255, 0.3)', 'rgba(0, 0, 0, 1)']}
         style={styles.linearGradient}>
         <KeyboardAwareScrollView
@@ -116,7 +116,7 @@ const RegisterScreen = ({ navigation }: any) => {
               value={username}
               style={styles.textInput}
               placeholder='@egectnr'
-              placeholderTextColor={"#474747"}
+              placeholderTextColor={Platform.OS == "android" ? "#bbbbbb" : "#474747"}
               onChangeText={(text) => setUsername(text)}
             />
           </View>

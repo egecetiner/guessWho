@@ -29,7 +29,7 @@ const SkipHeaderRight = ({ onClickHeaderRight }: SkipHeaderRight) => {
 
     return (
         <TouchableOpacity style={styles.container} onPress={onClickHeaderRight}>
-            <Text style={styles.title}>Skip Registration</Text>
+            <Text style={styles.title}>Skip</Text>
 
             <Fontisto
                 color={colorScheme === "dark" ? "white" : "black"}

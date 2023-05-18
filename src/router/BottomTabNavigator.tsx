@@ -21,6 +21,7 @@ const ProfileStack = () => {
             screenOptions={{
                 headerTintColor: colorScheme === "dark" ? "white" : "black",
                 headerShown: true,
+                headerTitleAlign: 'center',
                 headerTitle: () => <CustomHeader />,
             }}>
             <Stack.Screen
@@ -64,6 +65,7 @@ const BottomTabNavigator = () => {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerTitleAlign: 'center',
                 headerShown: false,
                 tabBarHideOnKeyboard: true,
                 tabBarInactiveTintColor: 'white',
@@ -84,6 +86,7 @@ const BottomTabNavigator = () => {
                     tabBarIcon: ({ color }) => (
                         <FontAwesome5 name='mask' color={color} size={25} />
                     ),
+                    headerTitleAlign: 'center',
                     headerShown: true, headerTitle: () => <CustomHeader />,
                 }} />
         </Tab.Navigator>
