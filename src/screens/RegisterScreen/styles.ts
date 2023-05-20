@@ -69,14 +69,17 @@ const styles = StyleSheet.create({
         color: "white",
     },
     step2Text: {
+        color: "black",
         fontSize: 20,
         marginTop: 15,
         marginBottom: 5
     },
     step1Text: {
+        color: "black",
         fontSize: 20,
     },
     registerText: {
+        color: "black",
         fontSize: 30,
         fontWeight: "bold",
         textDecorationLine: "underline"
@@ -100,6 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#C0BBB5"
     },
     dropdownText: {
+        color: "black",
         fontSize: 20
     }
 })

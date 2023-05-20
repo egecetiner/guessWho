@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     number: {
+        color: "black",
         fontSize: 20,
         fontWeight: "bold",
         alignSelf: "center"

@@ -43,12 +43,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
+        color: "black",
         marginVertical: 10,
         marginRight: 5,
         fontSize: 20,
         fontWeight: "bold"
     },
     textInside: {
+        color: "black",
         fontSize: 20,
         fontWeight: "normal"
     },
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: "10%",
     },
     instaText: {
+        color: "black",
         fontSize: 20,
         marginTop: 15,
         textAlign: "center"
@@ -96,6 +99,7 @@ const styles = StyleSheet.create({
         width: width
     },
     contentHeadlines: {
+        color: "black",
         fontWeight: "bold",
         fontSize: 25
     },
@@ -110,11 +114,11 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     statisticsText: {
-   
+        color: "black",
         fontSize: 20
     },
     statisticsHead: {
-   
+        color: "black",
         fontSize: 20
     }
 })

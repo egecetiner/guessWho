@@ -120,13 +120,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#C0BBB5"
     },
     dropdownText: {
+        color: "black",
         fontSize: 20
     },
     step2Text: {
+        color: "black",
         fontWeight: "bold",
         fontSize: 20,
     },
     step1Text: {
+        color: "black",
         fontWeight: "bold",
         fontSize: 20,
         marginBottom: 15

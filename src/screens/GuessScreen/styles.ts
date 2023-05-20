@@ -26,12 +26,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
+        color: "black",
         marginVertical: 10,
         marginRight: 5,
         fontSize: 20,
         fontWeight: "bold"
     },
     textInside: {
+        color: "black",
         fontSize: 20,
         fontWeight: "normal"
     },
@@ -45,6 +47,7 @@ const styles = StyleSheet.create({
         paddingBottom: 70
     },
     textBold: {
+        color: "black",
         fontSize: 25,
         fontWeight: "bold"
     },
@@ -90,6 +93,7 @@ const styles = StyleSheet.create({
         flex: 0.6
     },
     enoughUserText: {
+        color: "black",
         fontSize: 20,
         textAlign: "center",
         fontWeight: "bold"

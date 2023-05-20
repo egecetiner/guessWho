@@ -35,11 +35,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hintHeadline: {
+    color: "black",
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
   hintExplanation: {
+    color: "black",
     fontSize: 20,
   },
   hintsContainer: {

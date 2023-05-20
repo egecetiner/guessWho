@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Image, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
+import { Alert, Image, Text, TextInput, TouchableOpacity, View, ImageBackground, Platform } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -166,7 +166,7 @@ const UpdateScreen = ({ navigation }: any) => {
         style={styles.backgroundImage}
       >
         <LinearGradient
-          start={{ x: 0, y: 0.6 }} end={{ x: 0, y: 1 }}
+          start={{ x: 0, y: Platform.OS === "ios" ? 0.6 : 0.75 }} end={{ x: 0, y: 1 }}
           colors={['rgba(255, 255, 255, 0.5)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
           <KeyboardAwareScrollView

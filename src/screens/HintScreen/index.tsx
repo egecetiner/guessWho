@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ImageBackground, Platform, Text, TouchableOpacity, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { getUniqueId } from 'react-native-device-info';
 import storage from '@react-native-firebase/storage';
@@ -85,7 +85,7 @@ const HintScreen = ({ navigation, route }: any) => {
         style={styles.backgroundImage}
       >
         <LinearGradient
-          start={{ x: 0, y: 0.3 }} end={{ x: 0, y: 1 }}
+          start={{ x: 0, y: Platform.OS === "ios" ? 0.3 : 0.75 }} end={{ x: 0, y: 1 }}
           colors={['rgba(255, 255, 255, 0.6)', 'rgba(0, 0, 0, 1)']}
           style={styles.linearGradient}>
           <KeyboardAwareScrollView

@@ -231,7 +231,7 @@ const GuessScreen = ({ navigation, route }: any) => {
                                         <Text style={styles.textBold}>
                                             Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
                                         </Text>
-                                        <Text>Please select a person to continue.</Text>
+                                        <Text style={{color: "black"}}>Please select a person to continue.</Text>
 
                                         <FlatList
                                             keyExtractor={(item) => item?.id}
