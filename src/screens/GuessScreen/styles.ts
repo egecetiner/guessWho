@@ -97,6 +97,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: "center",
         fontWeight: "bold"
+    },
+    textSwipe: { 
+        flex: 1, 
+        flexDirection: "row", 
+        justifyContent: "space-between" 
     }
 })
 

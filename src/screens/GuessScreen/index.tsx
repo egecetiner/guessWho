@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ImageBackground, Text, TouchableOpacity, View, Image, FlatList, ScrollView, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { User } from '../../utils/Types';
 import styles from './styles';
 import Loading from '../../utils/Loading';
@@ -227,12 +228,18 @@ const GuessScreen = ({ navigation, route }: any) => {
                                                 return (TextInside(hint, index + 1))
                                             })}
                                         </ImageBackground>
-
                                         <Text style={styles.textBold}>
                                             Guess who <Text style={{ fontWeight: "normal" }}>belongs to hints?</Text>
                                         </Text>
-                                        <Text style={{color: "black"}}>Please select a person to continue.</Text>
-
+                                        <View style={styles.textSwipe}>
+                                            <Text style={{ color: "black" }}>Please select a person to continue.</Text>
+                                            <MaterialCommunityIcons
+                                                style={{ marginRight: 40, marginTop: 10 }}
+                                                color="black"
+                                                name='gesture-swipe-left'
+                                                size={25}
+                                            />
+                                        </View>
                                         <FlatList
                                             keyExtractor={(item) => item?.id}
                                             style={{ marginVertical: 20 }}
