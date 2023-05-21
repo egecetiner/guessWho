@@ -1,4 +1,4 @@
-package com.guesswho;
+package com.guesswhoami;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

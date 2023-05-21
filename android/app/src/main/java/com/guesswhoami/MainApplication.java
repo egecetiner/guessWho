@@ -1,4 +1,4 @@
-package com.guesswho;
+package com.guesswhoami;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
