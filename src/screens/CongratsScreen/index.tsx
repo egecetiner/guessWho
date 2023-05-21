@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Text, TouchableOpacity, View, Image, ImageBackground } from 'react-native';
 import { User } from '../../utils/Types';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
+import { AppContext } from '../../context/AppContext';
 
 const CongratsScreen = ({ navigation, route }) => {
+    const { user } = useContext(AppContext)
     const { chosenUser }: { chosenUser: User } = route.params
     useEffect(() =>
         navigation.addListener('beforeRemove', (e) => {
@@ -29,12 +31,30 @@ const CongratsScreen = ({ navigation, route }) => {
                             source={{ uri: chosenUser?.imageUrl }}
                         />
                         <View style={styles.textContainer}>
-                            <Text style={styles.instagramHeadline}>Instagram</Text>
-                            <Text style={styles.instagramText}>{chosenUser?.instagram}</Text>
+                            <Text style={[styles.instagramHeadline, { textDecorationLine: user?.registeredUser ? "underline" : "none" }]}>{
+                                user?.registeredUser ?
+                                    "Instagram" : "To access another user's Instagram, edit your profile and provide your information."
+                            }</Text>
+                            {user?.registeredUser && <Text style={styles.instagramText}>
+                                {chosenUser?.instagram}
+                            </Text>}
                         </View>
                     </View>
 
                     <View style={styles.buttonContainer}>
+                        {
+                            !user?.registeredUser && <TouchableOpacity
+                                style={
+                                    styles.btn
+                                }
+                                onPress={() => navigation.push("ProfileUpdate")}>
+                                <Text
+                                    style={styles.buttonText}>
+                                    EDIT PROFILE
+                                </Text>
+                            </TouchableOpacity>
+                        }
+
                         <TouchableOpacity
                             style={
                                 styles.btn

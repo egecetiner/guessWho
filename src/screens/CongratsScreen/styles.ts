@@ -46,11 +46,12 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     instagramHeadline: {
+        color: "black",
         fontWeight: "bold",
         fontSize: 20,
-        textDecorationLine: "underline"
     },
     instagramText: {
+        color: "black",
         fontSize: 20,
         marginTop: 10
     },
