@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
 const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     textInput: {
+        color: Platform.OS === "android" ? "#bbbbbb": "black",
         borderColor: "black",
         borderWidth: 2,
         borderRadius: 10,

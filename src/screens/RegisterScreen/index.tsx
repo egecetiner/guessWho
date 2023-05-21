@@ -65,7 +65,7 @@ const RegisterScreen = ({ navigation }: any) => {
       style={styles.backgroundImage}
     >
       <LinearGradient
-        start={{ x: 0, y: Platform.OS === "ios" ? 0.6 : 0.7 }} end={{ x: 0, y: 1 }}
+        start={{ x: 0, y: 0.6 }} end={{ x: 0, y: 1 }}
         colors={['rgba(255, 255, 255, 0.3)', 'rgba(0, 0, 0, 1)']}
         style={styles.linearGradient}>
         <KeyboardAwareScrollView
