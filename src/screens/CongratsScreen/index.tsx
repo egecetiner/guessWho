@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Text, TouchableOpacity, View, Image, ImageBackground } from 'react-native';
+import { Text, TouchableOpacity, View, Image, ImageBackground, Linking } from 'react-native';
 import { User } from '../../utils/Types';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,6 +13,19 @@ const CongratsScreen = ({ navigation, route }) => {
             e.preventDefault();
         }),
         [navigation]);
+
+    const onPressInstagram = () => {
+        let instagram;
+        if(Array.from(chosenUser?.instagram)[0] === "@") {
+            instagram = chosenUser?.instagram.substring(1)
+        } else {
+            instagram = chosenUser?.instagram
+        }
+        Linking.openURL(`instagram://user?username=${instagram}`)
+        .catch(() => {
+          Linking.openURL(`https://www.instagram.com/${instagram}`);
+        })
+    }
 
     return (
         <ImageBackground
@@ -35,15 +48,17 @@ const CongratsScreen = ({ navigation, route }) => {
                                 user?.registeredUser ?
                                     "Instagram" : "To access another user's Instagram, edit your profile and provide your information."
                             }</Text>
-                            {user?.registeredUser && <Text style={styles.instagramText}>
+                            {user?.registeredUser && 
+                            <Text style={styles.instagramText}>
                                 {chosenUser?.instagram}
-                            </Text>}
+                            </Text>
+                            }
                         </View>
                     </View>
 
                     <View style={styles.buttonContainer}>
                         {
-                            !user?.registeredUser && <TouchableOpacity
+                            !user?.registeredUser ? <TouchableOpacity
                                 style={
                                     styles.btn
                                 }
@@ -52,7 +67,18 @@ const CongratsScreen = ({ navigation, route }) => {
                                     style={styles.buttonText}>
                                     EDIT PROFILE
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> :
+                                 <TouchableOpacity
+                                 style={
+                                     styles.btn
+                                 }
+                                 onPress={onPressInstagram}
+                                 >
+                                 <Text
+                                     style={styles.buttonText}>
+                                     GO TO INSTAGRAM PROFILE
+                                 </Text>
+                             </TouchableOpacity>
                         }
 
                         <TouchableOpacity

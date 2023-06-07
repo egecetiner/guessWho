@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     buttonText: {
+        textAlign: "center",
         fontWeight: 'bold',
         fontSize: 15,
         color: "white",
