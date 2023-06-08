@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { AppContext } from '../../context/AppContext';
 
 const GuessScreen = ({ navigation, route }: any) => {
-    const { user, setUser } = useContext(AppContext)
+    const { user, setUser, guessedUsers, setGuessedUsers } = useContext(AppContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [chosenUser, setChosenUser] = useState<User>(undefined);
     const [newUsers, setNewUsers] = useState<Array<User>>();
@@ -45,14 +45,18 @@ const GuessScreen = ({ navigation, route }: any) => {
             .where("id", "!=", user?.id)
             .where("gender", "in", ["Prefer Not to Say", ...user?.genderPreferences])
             .get().then(async (usersArray) => {
-                if (usersArray.size < 6) {
+                const filteredArray = usersArray.docs.filter((item) => {
+                    return guessedUsers.indexOf(item.data().id) < 0;
+                })
+
+                if (filteredArray.length < 6) {
                     setNotEnoughUser(true)
                 } else {
                     setNotEnoughUser(false)
                     while (randomUsers.length < 5) {
-                        let randomIndex = generateRandomNumber(usersArray.size - 1)
-                        let randomUser = usersArray.docs[randomIndex].data()
-                        usersArray.docs.splice(randomIndex, 1)
+                        let randomIndex = generateRandomNumber(filteredArray.length - 1)
+                        let randomUser = filteredArray[randomIndex].data()
+                        filteredArray.splice(randomIndex, 1)
                         try {
                             await getBase64FromUrl(randomUser?.imageUrl).then((result) => {
                                 randomUser.imageUrl = result
@@ -66,6 +70,7 @@ const GuessScreen = ({ navigation, route }: any) => {
             })
         // displayed user index chosen.
         let randomIndex = Math.floor(Math.random() * 5)
+        setGuessedUsers(current => [...current, randomUsers[randomIndex]?.id]);
         setChosenUser(randomUsers[randomIndex])
         setNewUsers(randomUsers)
         setLoading(false)
